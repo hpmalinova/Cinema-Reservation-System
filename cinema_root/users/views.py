@@ -8,8 +8,7 @@ class UserViews:
         self.controller = UserController()
 
     def login(self):
-        user = ''
-        while not user:
+        for i in range(3):
             email = self.get_input('Email: ')
             password = self.get_input('Password: ')
 
@@ -24,6 +23,8 @@ class UserViews:
 
             except Exception as exc:
                 print(str(exc) + '\nTry again!')
+        print('You tried to log in 3 times. No more tries!')
+        return
 
     def signup(self):
         user = ''
