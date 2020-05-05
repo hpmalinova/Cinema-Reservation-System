@@ -10,6 +10,7 @@ class UserGateway:
 
     def create(self, *, email, password):
         self.model.validate(email, password)
+
         print('email', email)
         hashed_password = self.model.hash_password(password)
 

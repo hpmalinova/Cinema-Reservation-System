@@ -10,7 +10,7 @@ class ClientView:
 
     def welcome(self):
         print(f'Welcome to HackCinema, {self.user.email}')
-        #self.execute_command('help')
+        self.execute_command('help')
 
         command = self.get_input('>> Your command: ')
 

@@ -35,7 +35,9 @@ class UserViews:
                 user = self.controller.create_user(email=email, password=password)
                 ClientView(user)
             except ValueError as exc:
-                print(str(exc) + '\nTry again.')
+                print(str(exc) + '\nTry again!')
+            except AssertionError as exc:
+                print(str(exc) + '\nTry again!')
 
     @staticmethod
     def get_input(msg):
