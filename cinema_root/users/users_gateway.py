@@ -1,6 +1,6 @@
 from cinema_root.db import Database
 from .models import UserModel
-from user_queries import SELECT_ALL_USERS
+from .user_queries import SELECT_ALL_USERS
 
 
 class UserGateway:
