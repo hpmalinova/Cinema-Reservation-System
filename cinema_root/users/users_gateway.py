@@ -21,12 +21,20 @@ class UserGateway:
         self.db.cursor.execute(create_query, (email, hashed_password, 'Client'))
 
         # Get User ID from DB
-        get_id_query = f'SELECT id FROM users WHERE email={email};'
+        get_id_query = f'SELECT id FROM users WHERE email= \'{email}\';'
         self.db.cursor.execute(get_id_query)
 
-        user_id = self.db.cursor.fetchone()  # CHECK TYPE
+        user_id = self.db.cursor.fetchone()[0]  # CHECK TYPE
 
-        return self.model(user_id, email, hashed_password, 'Client')
+        self.db.connection.commit()
+
+        if user_id:
+            print('user_id', user_id)
+        else:
+            print('no user id')
+
+        return self.model(user_id=user_id, email=email,
+                          password=hashed_password, user_type='Client')
 
     def get_all_users(self):
         self.db.cursor.execute(SELECT_ALL_USERS)
@@ -34,18 +42,27 @@ class UserGateway:
 
         all_users = []
         for raw_user in raw_users:
-            all_users.append(self.model(raw_user[0], raw_user[1], raw_user[2], raw_user[3]))
+            all_users.append(self.model(user_id=raw_user[0], email=raw_user[1],
+                                        password=raw_user[2], user_type=raw_user[3]))
 
         return all_users
 
     def get(self, *, email, password):
         # Get User from FB
-        get_user_query = f'SELECT * FROM users WHERE email={email};'
-        raw_user = self.db.cursor.execute(get_user_query)
+        get_user_query = f'SELECT * FROM users WHERE email=\'{email}\';'
+        self.db.cursor.execute(get_user_query)
+        raw_user = self.db.cursor.fetchone()
+
+        self.db.connection.commit()
 
         if raw_user:
+            print(raw_user[0], ' ', raw_user[1], ' ', raw_user[2], ' ', raw_user[3])
             hashed_password = self.model.hash_password(password)
             if hashed_password == raw_user[2]:
-                return self.model(raw_user[0], raw_user[1], raw_user[2], raw_user[3])
+                print('here')
+                return self.model(user_id=raw_user[0], email=raw_user[1],
+                                  password=raw_user[2], user_type=raw_user[3])
+            else:
+                raise ValueError('Wrong password')
         else:
-            raise Exception('User not found.')
+            raise ValueError('User not found.')

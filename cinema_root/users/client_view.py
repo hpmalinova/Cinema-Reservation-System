@@ -10,7 +10,7 @@ class ClientView:
 
     def welcome(self):
         print(f'Welcome to HackCinema, {self.user.email}')
-        self.execute_command('help')
+        #self.execute_command('help')
 
         command = self.get_input('>> Your command: ')
 
@@ -22,7 +22,7 @@ class ClientView:
 
     # @staticmethod
     def execute_command(self, command):
-        all_commands = {'help': self.show_commands}
+        all_commands = {'help': self.show_commands, 'view profile': self.view_profile}
 
         if command in all_commands:
             all_commands[command]()
@@ -35,6 +35,12 @@ class ClientView:
         print('''
     You can do:
         ''')
+
+    def view_profile(self):
+        print(self.user.user_id)
+        print(self.user.email)
+        print(self.user.password)
+        print(self.user.user_type)
 
     @staticmethod
     def get_input(msg):

@@ -17,9 +17,9 @@ class UserViews:
                 user = self.controller.get_user(email=email, password=password)
 
                 if user:
-                    if user.type == 'Admin':
+                    if user.user_type == 'Admin':
                         AdminView(user)
-                    elif user.type == 'Client':
+                    elif user.user_type == 'Client':
                         ClientView(user)
 
             except Exception as exc:

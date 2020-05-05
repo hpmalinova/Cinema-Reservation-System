@@ -3,10 +3,11 @@ from .validation import validate_email, validate_password
 
 
 class UserModel:
-    def __init__(self, *, id, email, password):
-        self.id = id
+    def __init__(self, *, user_id, email, password, user_type):
+        self.user_id = user_id
         self.email = email
         self.password = password
+        self.user_type = user_type
 
     @staticmethod
     def validate(email, password):
