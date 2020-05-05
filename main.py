@@ -1,9 +1,13 @@
-import sys
-sys.path.append(".")
-from db import Database
-from db_schema import CREATE_USERS
+from cinema_root.db import Database
+from cinema_root.db_schema import *
+from cinema_root.index_view import welcome
 
-from index_view import welcome
+import sys
+# sys.path.append(".")
+# from db import Database
+# from db_schema import CREATE_USERS
+
+# from index_view import welcome
 
 
 class Application:

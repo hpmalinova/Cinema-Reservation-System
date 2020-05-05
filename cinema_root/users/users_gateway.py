@@ -1,4 +1,4 @@
-from ..db import Database
+from cinema_root.db import Database
 from .models import UserModel
 
 
