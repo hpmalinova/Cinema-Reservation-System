@@ -42,7 +42,7 @@ def validate_password(password):
     found_special_symbol = False
     found_capital_letter = False
 
-    assert len(password) < 8, ValueError('Password length must be greater or equal to eight.')
+    assert len(password) >= 8, ValueError('Password length must be greater or equal to eight.')
 
     for elem in password:
         if elem in special_symbols:

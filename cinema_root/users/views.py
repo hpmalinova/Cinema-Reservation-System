@@ -23,7 +23,7 @@ class UserViews:
                         ClientView(user)
 
             except Exception as exc:
-                print(exc + '\nTry again!')
+                print(str(exc) + '\nTry again!')
 
     def signup(self):
         user = ''
@@ -35,7 +35,7 @@ class UserViews:
                 user = self.controller.create_user(email=email, password=password)
                 ClientView(user)
             except ValueError as exc:
-                print(exc + '\nTry again.')
+                print(str(exc) + '\nTry again.')
 
     @staticmethod
     def get_input(msg):
