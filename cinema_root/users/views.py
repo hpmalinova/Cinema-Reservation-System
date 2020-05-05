@@ -1,15 +1,45 @@
-from .controllers import UserContoller
+from .controllers import UserController
+from .admin_view import AdminView
+from .client_view import ClientView
 
 
 class UserViews:
     def __init__(self):
-        self.controller = UserContoller()
+        self.controller = UserController()
 
     def login(self):
-        pass
+        user = ''
+        while not user:
+            email = self.get_input('Email: ')
+            password = self.get_input('Password: ')
+
+            try:
+                user = self.controller.get_user(email=email, password=password)
+
+                if user:
+                    if user.type == 'Admin':
+                        AdminView(user)
+                    elif user.type == 'Client':
+                        ClientView(user)
+
+            except Exception as exc:
+                print(exc + '\nTry again!')
 
     def signup(self):
-        email = input('Email: ')
-        password = input('Password: ')
+        user = ''
+        while not user:
+            email = self.get_input('Email: ')
+            password = self.get_input('Password: ')
 
-        self.controller.create_user(email=email, password=password)
+            try:
+                user = self.controller.create_user(email=email, password=password)
+                ClientView(user)
+            except ValueError as exc:
+                print(exc + '\nTry again.')
+
+    @staticmethod
+    def get_input(msg):
+        var = input(msg)
+        while not var:
+            var = input(msg)
+        return var
