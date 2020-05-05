@@ -10,8 +10,13 @@ class Application:
     def build(self):
         db = Database()
         db.cursor.execute(CREATE_USERS)
-        # TODO: Build rest of the tables
-        # TODO: Seed with inistial data - consider using another command for this
+        db.cursor.execute(CREATE_MOVIES)
+        db.cursor.execute(CREATE_PROJECTIONS)
+        db.cursor.execute(CREATE_RESERVATIONS)
+
+        db.cursor.execute(INIT_USERS)
+        db.cursor.execute(INIT_MOVIES)
+        db.cursor.execute(INIT_PROJECTIONS)
 
         db.connection.commit()
         db.connection.close()

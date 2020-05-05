@@ -18,4 +18,3 @@ class UserModel:
         for i in range(100000):
             password = hashlib.sha256(password.encode()).hexdigest()
         return password
-
