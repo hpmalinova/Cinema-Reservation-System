@@ -9,7 +9,7 @@ class ClientView:
         self.welcome()
 
     def welcome(self):
-        print(f'Welcome to HackCinema, {self.user.name}')
+        print(f'Welcome to HackCinema, {self.user.email}')
         self.execute_command('help')
 
         command = self.get_input('>> Your command: ')
@@ -25,14 +25,16 @@ class ClientView:
         all_commands = {'help': self.show_commands}
 
         if command in all_commands:
-            self.execute_command[command]()
+            all_commands[command]()
         else:
             print(f'Unknown command: {command}. Try again!')
             return False
 
     @staticmethod
     def show_commands():
-        pass
+        print('''
+    You can do:
+        ''')
 
     @staticmethod
     def get_input(msg):
