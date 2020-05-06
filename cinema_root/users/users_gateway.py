@@ -11,7 +11,6 @@ class UserGateway:
     def create(self, *, email, password):
         self.model.validate(email, password)
 
-        print('email', email)
         hashed_password = self.model.hash_password(password)
 
         # Create User in DB
@@ -28,11 +27,6 @@ class UserGateway:
         user_id = self.db.cursor.fetchone()[0]  # CHECK TYPE
 
         self.db.connection.commit()
-
-        if user_id:
-            print('user_id', user_id)
-        else:
-            print('no user id')
 
         return self.model(user_id=user_id, email=email,
                           password=hashed_password, user_type='Client')
@@ -57,10 +51,8 @@ class UserGateway:
         self.db.connection.commit()
 
         if raw_user:
-            print(raw_user[0], ' ', raw_user[1], ' ', raw_user[2], ' ', raw_user[3])
             hashed_password = self.model.hash_password(password)
             if hashed_password == raw_user[2]:
-                print('here')
                 return self.model(user_id=raw_user[0], email=raw_user[1],
                                   password=raw_user[2], user_type=raw_user[3])
             else:
