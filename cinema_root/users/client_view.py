@@ -1,6 +1,7 @@
 from cinema_root.movies.movie_views import MovieViews
-# from cinema_root.reservations.reservation_views import ReservationViews
+from cinema_root.reservations.reservation_views import ReservationViews
 from cinema_root.projections.projection_views import ProjectionView
+
 import os
 
 
@@ -32,25 +33,23 @@ class ClientView:
             'show_projections': self.show_projections,
             'show_projections_by_movie_id': self.show_projections_by_movie_id
         }
-
         command_split = command.split()
 
         if command_split[0] in all_commands:
             all_commands[command_split[0]](command_split[1:])
         else:
             print(f'Unknown command: {command}. Try again!')
-            return False
 
     @staticmethod
     def show_commands(*args):
-        print('=====Commands=====')
+        print('=============Commands=============')
         print('- view_profile')
         print('- show_all_movies')
         print('- make_reservation')
         print('- show_projections')
         print('- show_projections_by_movie_id')
-        print('------------------')
         print('- help')
+        print('----------------------------------')
 
     def view_profile(self, *args):
         print('User ID: ', self.user.user_id)
