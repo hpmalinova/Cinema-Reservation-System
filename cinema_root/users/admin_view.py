@@ -1,23 +1,5 @@
-# User
-# delete user
-# show all users
-# show all clients
-# change type ? (client-->admin)
-
-
-# Movie
-# add
-# delete
-# update title/ year
-# show all by rating)
-# update rating (id)
-
-# Projections
-# add
-# delete
-# update/time/type
-
 from .controllers import UserController
+from cinema_root.movies.movie_views import AdminMovieView
 
 
 class AdminView:
@@ -40,7 +22,9 @@ class AdminView:
 
     # @staticmethod
     def execute_command(self, command):
-        all_commands = {'help': self.show_commands, 'get_all_users': self.get_all_users}
+        all_commands = {'help': self.show_commands, 'get_all_users': self.get_all_users,
+                        'add_movie': self.add_movie, 'show_all_movies': self.show_all_movies,
+                        'delete_movie': self.delete_movie}
 
         if command in all_commands:
             all_commands[command]()
@@ -76,3 +60,15 @@ class AdminView:
         while not var:
             var = input(msg)
         return var
+
+    def add_movie(self):
+        try:
+            AdminMovieView().add_movie()
+        except ValueError as exc:
+            print(str(exc) + '\nTry again.')
+
+    def delete_movie(self):
+        AdminMovieView().delete_movie()
+
+    def show_all_movies(self):
+        AdminMovieView().show_all_movies()
