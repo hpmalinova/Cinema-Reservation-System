@@ -128,3 +128,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# For project
+
+passwords_of_users.png
+questions.txt
+requirements.txt
