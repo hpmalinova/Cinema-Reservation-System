@@ -1,5 +1,7 @@
 from .controllers import UserController
 from cinema_root.movies.movie_views import AdminMovieView
+from cinema_root.projections.projection_views import AdminProjectionView
+
 import os
 
 
@@ -29,9 +31,13 @@ class AdminView:
     # @staticmethod
     def execute_command(self, command):
         all_commands = {
-            'help': self.show_commands, 'get_all_users': self.get_all_users, 'delete_user': self.delete_user,
+            'view_profile': self.view_profile, 'help': self.show_commands,
+            'get_all_users': self.get_all_users, 'delete_user': self.delete_user,
             'promote_user': self.promote_user, 'get_user': self.get_user, 'show_all_movies': self.show_all_movies,
-            'add_movie': self.add_movie, 'delete_movie': self.delete_movie
+            'add_movie': self.add_movie, 'delete_movie': self.delete_movie,
+            'add_projection': self.add_projection, 'delete_projection': self.delete_projection,
+            'show_projections': self.show_projections, 'update_projection': self.update_projection,
+            'show_projections_by_movie_id': self.show_projections_by_movie_id
         }
         command_split = command.split()
 
@@ -40,6 +46,11 @@ class AdminView:
         else:
             print(f'Unknown command: {command}. Try again!')
             return False
+
+    def view_profile(self, *args):
+        print('User ID: ', self.user.user_id)
+        print('Email: ', self.user.email)
+        print('Type: ', self.user.user_type)
 
     def get_user(self, *args):
         assert args[0] != [], Exception('get_user takes one argument - <id>')
@@ -54,7 +65,7 @@ class AdminView:
         user_models = self.controller.get_all_users()
 
         for user in user_models:
-            print(user.user_id, user.email, user.password, user.user_type)
+            print('User ID: ', user.user_id, 'Email: ', user.email, 'Type: ', user.user_type)
 
     def promote_user(self, *args):
         assert args[0] != [], Exception('change_type_user takes one argument - <id>')
@@ -77,10 +88,10 @@ class AdminView:
     @staticmethod
     def show_commands(*args):
         print('# Users')
-        print('- get_user <id>')  # DONE
-        print('- get_all_users')  # DONE
-        print('- promote_user <id> <user_type>')  # DONE
-        print('- delete_user <id>\n')  # DONE
+        print('- get_user <id>')
+        print('- get_all_users')
+        print('- promote_user <id> <user_type>')
+        print('- delete_user <id>\n')
         print('# Movie')
         print('- add_movie')
         print('- show_all_movies')
@@ -89,6 +100,8 @@ class AdminView:
         print('- add_projection')
         print('- update_projection')
         print('- delete_projection')
+        print('- show_projections')
+        print('- show_projections_by_movie_id')
         print('# help')
 
     @staticmethod
@@ -109,3 +122,18 @@ class AdminView:
 
     def show_all_movies(self, *args):
         AdminMovieView().show_all_movies()
+
+    def add_projection(self, *args):
+        AdminProjectionView().add_projection()
+
+    def delete_projection(self, *args):
+        AdminProjectionView().delete_projection()
+
+    def show_projections(self, *args):
+        AdminProjectionView().show_all_projections()
+
+    def update_projection(self, *args):
+        AdminProjectionView().update_projection()
+
+    def show_projections_by_movie_id(self, *args):
+        AdminProjectionView().show_projections_by_movie_id()
