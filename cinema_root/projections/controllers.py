@@ -19,8 +19,11 @@ class MovieController:
     def update_projection_type(self, p_id, new_p_type):
         return self.gateway.update_projection_type(p_id, new_p_type)
 
-    def update_projection_date(self, p_id, new_p_date):
-        return self.gateway.update_projection_date(p_id, new_p_date)
+    def update_projection(self, p_id, to_upd, new_value):
+        return self.gateway.update_projection_type(p_id, to_upd, new_value)
 
-    def update_projection_time(self, p_id, new_p_time):
-        return self.gateway.uptime_projection_time(p_id, new_p_time)
+    # def update_projection_date(self, p_id, new_p_date):
+    #     return self.gateway.update_projection_date(p_id, new_p_date)
+
+    # def update_projection_time(self, p_id, new_p_time):
+    #     return self.gateway.uptime_projection_time(p_id, new_p_time)

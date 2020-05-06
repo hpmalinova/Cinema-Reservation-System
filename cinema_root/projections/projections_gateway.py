@@ -105,9 +105,7 @@ class ProjectionGateway:
         print(f'Projection with id: {p_id} was successfully updated.')
 
     def update_projection(self, p_id, to_upd, new_value):
-        available_updates = ['p_type', 'p_date', 'p_time']
-
-        if to_upd not in available_updates:
+        if to_upd not in self.available_updates:
             raise ValueError(f'You can`t update {to_upd}')
 
         projection_id = self.get_projection_id(p_id)
