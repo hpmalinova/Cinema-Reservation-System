@@ -17,7 +17,7 @@ INIT_MOVIES = '''
 '''
 
 INIT_PROJECTIONS = '''
-    INSERT INTO projections(movie_id, type, p_date, p_time)
+    INSERT INTO projections(movie_id, p_type, p_date, p_time)
         VALUES(1, "3D", "2020-05-15", "19:10"),
         (1, "4DX", "2020-05-15", "21:00"),
         (2, "4DX", "2020-06-15", "18:00"),
