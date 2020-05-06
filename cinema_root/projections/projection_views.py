@@ -2,12 +2,29 @@ from .controllers import ProjectionController
 from .validation import ALL_UPDATES
 
 
-class ProjectionViews:
+class ProjectionView:
     def __init__(self):
         self.controller = ProjectionController()
 
     def show_all_projections(self):
-        projections = self.controller.show_all_projections()
+        projections = self.controller.get_all_projections()
+        for projection in projections:
+            print(f'''
+    ------------------
+    ID: {projection.p_id}
+    Movie_ID: {projection.movie_id}
+    Type: {projection.p_type}
+    Date: {projection.p_date}
+    Time: {projection.p_time}
+    ------------------''')
+
+    def show_projections_by_movie_id(self):
+        movie_id = self.get_input('Enter id: ')
+        projections = self.controller.get_projections_by_movie_id(movie_id)
+
+        if not projections:
+            print(f'No projections for movie with id={movie_id}')
+            return
         for projection in projections:
             print(f'''
     ------------------
@@ -26,7 +43,7 @@ class ProjectionViews:
         return var
 
 
-class AdminProjectionView(ProjectionViews):
+class AdminProjectionView(ProjectionView):
     def __init__(self):
         super().__init__()
 
@@ -48,6 +65,7 @@ class AdminProjectionView(ProjectionViews):
         new_value = self.get_input('Enter new value: ')
         self.controller.update_projection(projection_id, what_to_update, new_value)
 
+    # MOVE TO UTILS
     def get_to_update(self, msg):
         what_to_update = input(msg)
 

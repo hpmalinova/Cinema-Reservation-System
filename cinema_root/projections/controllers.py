@@ -1,29 +1,25 @@
-from .projections_gateway import ProjectionGateway
+from .models import ProjectionModel
 
 
-class MovieController:
+class ProjectionController:
     def __init__(self):
-        self.gateway = ProjectionGateway()
+        self.model = ProjectionModel
 
+    def get_all_projections(self):
+        return self.model.get_all_projections()
+
+    # NO RETURN?????
     def add_projection(self, movie_id, p_type, p_date, p_time):
-        return self.gateway.add_projection(self, movie_id, p_type, p_date, p_time)
+        self.model.add_projection(movie_id, p_type, p_date, p_time)
 
     def delete_projection(self, p_id):
-        return self.gateway.delete_projection(p_id)
-
-    # delete_old_projections
-
-    def show_all_projections(self):
-        return self.gateway.show_all_projections()
-
-    def update_projection_type(self, p_id, new_p_type):
-        return self.gateway.update_projection_type(p_id, new_p_type)
+        self.model.delete_projection(p_id)
 
     def update_projection(self, p_id, to_upd, new_value):
-        return self.gateway.update_projection_type(p_id, to_upd, new_value)
+        return self.model.update_projection(p_id, to_upd, new_value)
 
-    # def update_projection_date(self, p_id, new_p_date):
-    #     return self.gateway.update_projection_date(p_id, new_p_date)
+    def get_projections_by_movie_id(self, movie_id):
+        return self.model.get_projections_by_movie_id(movie_id)
 
-    # def update_projection_time(self, p_id, new_p_time):
-    #     return self.gateway.uptime_projection_time(p_id, new_p_time)
+    # TODO
+    # delete_old_projections

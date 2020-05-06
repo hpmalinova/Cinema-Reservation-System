@@ -1,4 +1,4 @@
-SELECT_ALL_MOVIES = '''
+SELECT_ALL_PROJECTIONS = '''
     SELECT *
         FROM projections
 '''

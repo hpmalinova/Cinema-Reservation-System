@@ -10,12 +10,12 @@ def validate_type(p_type):
 
 
 def validate_date_and_time(p_date, p_time):
-    if len(p_date == 10):
+    if len(p_date) == 10:
         p_year = int(p_date[:4])
         p_month = int(p_date[5:7])
         p_day = int(p_date[8:])
 
-        if len(p_time == 5):
+        if len(p_time) == 5:
             p_hour = int(p_time[:2])
             p_min = int(p_time[3:])
 
