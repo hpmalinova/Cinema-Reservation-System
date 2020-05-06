@@ -33,15 +33,16 @@ class ProjectionGateway:
         return self.model(p_id=p_id, movie_id=movie_id, p_type=p_type,
                           p_date=p_date, p_time=p_time)
 
-    def delete_projection(self, id):
+    def delete_projection(self, p_id):
         # Check if Projection ID exists in DB
-        get_id_query = f'''
-        SELECT *
-            FROM projections
-            WHERE id= \'{id}\';
-        '''
-        self.db.cursor.execute(get_id_query)
-        projection_id = self.db.cursor.fetchone()[0]
+        projection_id = self.get_projection_id(p_id)
+        # get_id_query = f'''
+        # SELECT *
+        #     FROM projections
+        #     WHERE p_id= \'{id}\';
+        # '''
+        # self.db.cursor.execute(get_id_query)
+        # projection_id = self.db.cursor.fetchone()[0]
 
         if not projection_id:
             print('You can`t delete non existing projection.')
@@ -50,13 +51,13 @@ class ProjectionGateway:
         # Delete Projection in DB by id
         delete_query = f'''
             DELETE FROM projections
-                WHERE id= \'{id}\'
+                WHERE p_id= \'{p_id}\'
         '''
         self.db.cursor.execute(delete_query)
 
         self.db.connection.commit()
 
-        print(f'Projection with id: {id} was successfully deleted.')
+        print(f'Projection with id: {p_id} was successfully deleted.')
 
     def show_all_projections(self):
         self.db.cursor.execute(SELECT_ALL_PROJECTIONS)
@@ -73,3 +74,54 @@ class ProjectionGateway:
             all_projections.append(projection_model)
 
         return all_projections
+
+    def get_projection_id(self, p_id):
+        get_id_query = f'''
+        SELECT p_id
+            FROM projections
+            WHERE p_id= \'{p_id}\';
+        '''
+        self.db.cursor.execute(get_id_query)
+        raw_projection_id = self.db.cursor.fetchone()[0]
+        self.db.connection.commit()
+
+        return raw_projection_id
+
+    def update_projection_type(self, p_id, new_p_type):
+        projection_id = self.get_projection_id(p_id)
+
+        if not projection_id:
+            raise ValueError('You can`t update non existing projection.')
+
+        update_query = f'''
+            UPDATE projections
+                SET p_type = \'{new_p_type}\'
+                WHERE p_id= \'{p_id}\'
+        '''
+        self.db.cursor.execute(update_query)
+
+        self.db.connection.commit()
+
+        print(f'Projection with id: {p_id} was successfully updated.')
+
+    def update_projection(self, p_id, to_upd, new_value):
+        available_updates = ['p_type', 'p_date', 'p_time']
+
+        if to_upd not in available_updates:
+            raise ValueError(f'You can`t update {to_upd}')
+
+        projection_id = self.get_projection_id(p_id)
+
+        if not projection_id:
+            raise ValueError('You can`t update non existing projection.')
+
+        update_query = f'''
+            UPDATE projections
+                SET {to_upd} = \'{new_value}\'
+                WHERE p_id= \'{p_id}\'
+        '''
+        self.db.cursor.execute(update_query)
+
+        self.db.connection.commit()
+
+        print(f'Projection with id: {p_id} was successfully updated.')
