@@ -20,7 +20,6 @@ class AdminView:
             self.execute_command(command)
             input('\nPress Enter')
             os.system('clear')
-            self.execute_command('help')
             command = self.get_input('>> Your command: ')
             os.system('clear')
 
