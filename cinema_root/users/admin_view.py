@@ -30,7 +30,8 @@ class AdminView:
     def execute_command(self, command):
         all_commands = {
             'help': self.show_commands, 'get_all_users': self.get_all_users, 'delete_user': self.delete_user,
-            'promote_user': self.promote_user, 'get_user': self.get_user
+            'promote_user': self.promote_user, 'get_user': self.get_user, 'show_all_movies': self.show_all_movies,
+            'add_movie': self.add_movie, 'delete_movie': self.delete_movie
         }
         command_split = command.split()
 
@@ -97,14 +98,14 @@ class AdminView:
             var = input(msg)
         return var
 
-    def add_movie(self):
+    def add_movie(self, *args):
         try:
             AdminMovieView().add_movie()
         except ValueError as exc:
             print(str(exc) + '\nTry again.')
 
-    def delete_movie(self):
+    def delete_movie(self, *args):
         AdminMovieView().delete_movie()
 
-    def show_all_movies(self):
+    def show_all_movies(self, *args):
         AdminMovieView().show_all_movies()
