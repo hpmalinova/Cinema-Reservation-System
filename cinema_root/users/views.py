@@ -13,13 +13,13 @@ class UserViews:
             password = self.get_input('Password: ')
 
             try:
-                user = self.controller.get_user(email=email, password=password)
+                user = self.controller.login_user(email=email, password=password)
 
                 if user:
                     if user.user_type == 'Admin':
-                        AdminView(user)
+                        return AdminView(user)
                     elif user.user_type == 'Client':
-                        ClientView(user)
+                        return ClientView(user)
 
             except Exception as exc:
                 print(str(exc) + '\nTry again!')
@@ -33,8 +33,8 @@ class UserViews:
             password = self.get_input('Password: ')
 
             try:
-                user = self.controller.create_user(email=email, password=password)
-                ClientView(user)
+                user = self.controller.add_user(email=email, password=password)
+                return ClientView(user)
             except ValueError as exc:
                 print(str(exc) + '\nTry again!')
             except AssertionError as exc:
