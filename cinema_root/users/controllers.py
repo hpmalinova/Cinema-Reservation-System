@@ -17,8 +17,8 @@ class UserController:
     def get_user(self, id):
         return self.users_gateway.get_user(id=id)
 
-    def change_type_user(self, id, user_type):
-        return self.users_gateway.change_type_user(id=id, user_type=user_type)
+    def promote_user(self, id, user_type):
+        return self.users_gateway.promote_user(id=id, user_type=user_type)
 
     def delete_user(self, id):
         return self.users_gateway.delete_user(id=id)

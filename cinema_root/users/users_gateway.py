@@ -55,8 +55,10 @@ class UserGateway:
         self.db.cursor.execute(get_user_query)
         raw_user = self.db.cursor.fetchone()
         self.db.connection.commit()
-
-        return self.model(raw_user[0], raw_user[1], raw_user[3], raw_user[4])
+        if raw_user:
+            return self.model(user_id=raw_user[0], email=raw_user[1], password=raw_user[2], user_type=raw_user[3])
+        else:
+            raise Exception('User not found.')
 
     def get_all_users(self):  # DONE
         self.db.cursor.execute(SELECT_ALL_USERS)
@@ -71,14 +73,14 @@ class UserGateway:
 
         return all_users
 
-    def change_type_user(self, *, id, user_type):  # DONE
+    def promote_user(self, *, id, user_type):  # DONE
         select_user_query = f'SELECT * FROM users WHERE id ={id};'
         self.db.cursor.execute(select_user_query)
         raw_user = self.db.cursor.fetchone()
 
         if raw_user:
-            delete_user_query = f'UPDATE users SET user_type={user_type} WHERE id={id};'
-            self.db.cursor.execute(delete_user_query)
+            update_user_query = f'UPDATE users SET user_type="{user_type}" WHERE id={id};'
+            self.db.cursor.execute(update_user_query)
             self.db.connection.commit()
         else:
             raise Exception('User not found.')
