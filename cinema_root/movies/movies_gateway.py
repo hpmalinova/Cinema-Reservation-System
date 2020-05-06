@@ -8,21 +8,9 @@ class MovieGateway:
         self.model = MovieModel
         self.db = Database()
 
-    def show_all_movies(self):
-        self.db.cursor.execute(SELECT_ALL_MOVIES)
-        raw_movies = self.db.cursor.fetchall()
-
-        self.db.connection.commit()
-
-        all_movies = []
-
-        for raw_movie in raw_movies:
-            all_movies.append(self.model(movie_id=raw_movie[0], title=raw_movie[1],
-                                         year=raw_movie[2], rating=raw_movie[3]))
-
-        return all_movies
-
     def add_movie(self, title, year, rating):
+        year = int(year)
+        rating = float(rating)
         self.model.validate(year, rating)
 
         # Create Movie in DB
@@ -35,14 +23,14 @@ class MovieGateway:
         # Get Movie ID from DB
         get_id_query = f'''
         SELECT id
-            FROM movie
+            FROM movies
             WHERE title= \'{title}\' and year=\'{year}\';'''
         self.db.cursor.execute(get_id_query)
 
         movie_id = self.db.cursor.fetchone()[0]
 
         self.db.connection.commit()
-
+        print(f'Successfully created movie with id={movie_id}')
         return self.model(movie_id=movie_id, title=title,
                           year=year, rating=rating)
 
@@ -50,7 +38,7 @@ class MovieGateway:
         # Check if Movie ID exists in DB
         get_id_query = f'''
         SELECT *
-            FROM movie
+            FROM movies
             WHERE id= \'{id}\';
         '''
         self.db.cursor.execute(get_id_query)
@@ -70,3 +58,18 @@ class MovieGateway:
         self.db.connection.commit()
 
         print(f'Movie with id: {id} was successfully deleted.')
+
+    def show_all_movies(self):
+        self.db.cursor.execute(SELECT_ALL_MOVIES)
+        raw_movies = self.db.cursor.fetchall()
+
+        self.db.connection.commit()
+
+        all_movies = []
+
+        for raw_movie in raw_movies:
+            movie_model = self.model(movie_id=raw_movie[0], title=raw_movie[1],
+                                     year=raw_movie[2], rating=raw_movie[3])
+            all_movies.append(movie_model)
+
+        return all_movies
