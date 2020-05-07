@@ -48,7 +48,7 @@ class AdminView:
             return False
 
     def view_profile(self, *args):
-        print('User ID: ', self.user.user_id)
+        print('User ID: ', self.user.id)
         print('Email: ', self.user.email)
         print('Type: ', self.user.user_type)
 
@@ -57,7 +57,7 @@ class AdminView:
         assert int(args[0][0])
 
         user = self.controller.get_user(id=int(args[0][0]))
-        print('User ID: ', user.user_id, 'Email: ', user.email, 'Type: ', user.user_type)
+        print('User ID: ', user.id, 'Email: ', user.email, 'Type: ', user.user_type)
 
     def get_all_users(self, *args):
         assert args[0] == [], Exception('get_all_users does not take any arguments')
@@ -65,7 +65,7 @@ class AdminView:
         user_models = self.controller.get_all_users()
 
         for user in user_models:
-            print('User ID: ', user.user_id, 'Email: ', user.email, 'Type: ', user.user_type)
+            print('User ID: ', user.id, 'Email: ', user.email, 'Type: ', user.user_type)
 
     def promote_user(self, *args):
         assert args[0] != [], Exception('change_type_user takes one argument - <id>')
