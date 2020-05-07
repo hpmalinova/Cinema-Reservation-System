@@ -1,75 +1,49 @@
 from cinema_root.db import Database
-from .models import ReservationModel
-from .reservation_queries import SELECT_ALL_RESERVATIONS
+from .reservation_queries import (SELECT_ALL_RESERVATIONS, CREATE_QUERY, GET_RESERVATION_BY_PROJ_ID_ROW_COL,
+                                  GET_RESERVATION_BY_USER_ID_PROJ_ID_ROW_COL, GET_RESERVATION_BY_ID,
+                                  GET_RESERVATIONS_BY_PROJ_ID, DELETE_RESERVATION_BY_ID)
 
 
 class ReservationGateway:
     def __init__(self):
-        self.model = ReservationModel
         self.db = Database()
 
     def add_reservation(self, user_id, projection_id, row, col):
-        self.model.validate(row, col)
-        get_query = '''
-            SELECT *
-                FROM reservations
-                WHERE projection_id=? AND row=? AND col=?
-        '''
-        self.db.cursor.execute(get_query, (projection_id, row, col))
+        self.db.cursor.execute(GET_RESERVATION_BY_PROJ_ID_ROW_COL, (projection_id, row, col))
 
         occupied = self.db.cursor.fetchone()
 
         if occupied:
             raise Exception('Seat is taken.')
         else:
-            add_reservation_query = '''
-                INSERT INTO reservations(user_id, projection_id, row, col)
-                VALUES(?, ?, ?, ?);
-            '''
-            # fix?
-            # self.db.cursor = self.db.connection.cursor()
-            self.db.cursor.execute(add_reservation_query, (user_id, projection_id, row, col))
-
-            get_new_reservation_query = '''
-                SELECT *
-                    FROM reservations
-                    WHERE user_id=? AND projection_id=? AND row=? AND col=?
-            '''
-            self.db.cursor.execute(get_new_reservation_query, (user_id, projection_id, row, col))
-            reservation = self.db.cursor.fetchone()
+            self.db.cursor.execute(CREATE_QUERY, (user_id, projection_id, row, col))
+            self.db.cursor.execute(GET_RESERVATION_BY_USER_ID_PROJ_ID_ROW_COL, (user_id, projection_id, row, col))
+            raw_reservation = self.db.cursor.fetchone()
 
             self.db.connection.commit()
-            return self.model(
-                reservation_id=reservation[0],
-                user_id=reservation[1],
-                projection_id=reservation[2],
-                row=reservation[3],
-                col=reservation[4])
+
+            return raw_reservation
 
     def delete_reservation(self, id):
-        select_user_query = 'SELECT * FROM reservations WHERE id=?;'
-        self.db.cursor.execute(select_user_query, (id))
-        raw_user = self.db.cursor.fetchone()
+        # Check if Reservation ID exists in DB
+        self.db.cursor.execute(GET_RESERVATION_BY_ID, (id))
+        reservation_id = self.db.cursor.fetchone()[0]
 
-        if raw_user:
-            delete_user_query = 'DELETE FROM reservations WHERE id=?;'
-            self.db.cursor.execute(delete_user_query, (id))
-            self.db.connection.commit()
-        else:
-            raise Exception('Reservation not found.')
+        if not reservation_id:
+            print('You can`t delete non existing reservation.')
+            return
+
+        # Delete Reservation in DB by id
+        self.db.cursor.execute(DELETE_RESERVATION_BY_ID, (id))
+        self.db.connection.commit()
 
     def get_occupied_seats(self, projection_id):
-        select_user_query = 'SELECT * FROM reservations WHERE projection_id=?;'
-        self.db.cursor.execute(select_user_query, (projection_id))
+        self.db.cursor.execute(GET_RESERVATIONS_BY_PROJ_ID, (projection_id))
         raw_occupied = self.db.cursor.fetchall()
 
-        all_occupied = []
-        for seat in raw_occupied:
-            all_occupied.append(
-                self.model(reservation_id=seat[0], user_id=seat[1], projection_id=seat[2], row=seat[3], col=seat[4])
-            )
+        self.db.connection.commit()
 
-        return all_occupied
+        return raw_occupied
 
     def get_all_reservations(self):
         self.db.cursor.execute(SELECT_ALL_RESERVATIONS)
@@ -77,9 +51,4 @@ class ReservationGateway:
 
         self.db.connection.commit()
 
-        all_reservations = []
-        for reservation in raw_reservations:
-            all_reservations.append(self.model(user_id=reservation[0], projection_id=reservation[1],
-                                               row=reservation[2], col=reservation[3]))
-
-        return all_reservations
+        return raw_reservations
