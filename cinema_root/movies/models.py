@@ -22,7 +22,6 @@ class MovieModel:
 
         all_movies = []
         for raw_movie in raw_movies:
-            print('raw')
             movie_model = cls(**raw_movie)
             all_movies.append(movie_model)
 
