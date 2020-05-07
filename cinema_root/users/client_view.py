@@ -55,7 +55,7 @@ class ClientView:
         print('----------------------------------')
 
     def view_profile(self, *args):
-        print('User ID: ', self.user.user_id)
+        print('User ID: ', self.user.id)
         print('Email: ', self.user.email)
         print('Type: ', self.user.user_type)
 
@@ -76,4 +76,4 @@ class ClientView:
         ProjectionView().show_projections_by_movie_id()
 
     def make_reservation(self, *args):
-        ReservationViews().add_reservation(self.user.user_id)
+        ReservationViews().add_reservation(self.user.id)

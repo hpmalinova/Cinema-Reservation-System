@@ -11,7 +11,7 @@ CREATE_USER = '''
 GET_USER_ID = '''
     SELECT id
         FROM users
-        WHERE email=?;
+        WHERE id=?;
 '''
 
 GET_USER_BY_ID = '''
