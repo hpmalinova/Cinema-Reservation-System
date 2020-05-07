@@ -5,14 +5,20 @@ class ReservationController:
     def __init__(self):
         self.model = ReservationModel
 
+    def log_info(self, *args1):
+        def helper(*kwargs):
+            reservation = kwargs[0].model.add_reservation(kwargs[1], kwargs[2], kwargs[3], kwargs[4])
+            with open('log.txt', 'a+') as f:
+                f.write(f'ID: {reservation.id} ')
+                f.write(f'ProjectionID: {reservation.projection_id} ')
+                f.write(f'UserID: {reservation.user_id} ')
+                f.write(f'Row: {reservation.row} ')
+                f.write(f'Column: {reservation.col}\n')
+        return helper
+
+    @log_info
     def add_reservation(self, user_id, projection_id, row, col):
-        reservation = self.model.add_reservation(user_id, projection_id, row, col)
-        with open('log.txt', 'a+') as f:
-            f.write(f'ID: {reservation.id} ')
-            f.write(f'ProjectionID: {reservation.projection_id} ')
-            f.write(f'UserID: {reservation.user_id} ')
-            f.write(f'Row: {reservation.row} ')
-            f.write(f'Column: {reservation.col}\n')
+        self.model.add_reservation(user_id, projection_id, row, col)
 
     def delete_reservation(self, id):
         self.model.delete_reservation(id)
