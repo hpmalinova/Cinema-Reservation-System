@@ -1,5 +1,6 @@
 from cinema_root.db import Database
-from .movie_queries import SELECT_ALL_MOVIES
+from .movie_queries import (SELECT_ALL_MOVIES, CREATE_QUERY, GET_MOVIE_ID,
+                            GET_MOVIE_BY_ID, DELETE_MOVIE_BY_ID, GET_TITLE_BY_ID)
 
 
 class MovieGateway:
@@ -8,18 +9,10 @@ class MovieGateway:
 
     def add_movie(self, title, year, rating):
         # Create Movie in DB
-        create_query = '''
-            INSERT INTO movies (title, year, rating)
-            VALUES (?, ?, ?);
-        '''
-        self.db.cursor.execute(create_query, (title, year, rating))
+        self.db.cursor.execute(CREATE_QUERY, (title, year, rating))
 
         # Get Movie ID from DB
-        get_id_query = f'''
-        SELECT id
-            FROM movies
-            WHERE title= \'{title}\' and year=\'{year}\';'''
-        self.db.cursor.execute(get_id_query)
+        self.db.cursor.execute(GET_MOVIE_ID, (title, year))
 
         movie_id = self.db.cursor.fetchone()[0]
 
@@ -28,12 +21,7 @@ class MovieGateway:
 
     def delete_movie(self, id):
         # Check if Movie ID exists in DB
-        get_id_query = f'''
-        SELECT *
-            FROM movies
-            WHERE id= \'{id}\';
-        '''
-        self.db.cursor.execute(get_id_query)
+        self.db.cursor.execute(GET_MOVIE_BY_ID, (id))
         movie_id = self.db.cursor.fetchone()[0]
 
         if not movie_id:
@@ -41,12 +29,7 @@ class MovieGateway:
             return
 
         # Delete Movie in DB by id
-        delete_query = f'''
-            DELETE FROM movies
-                WHERE id= \'{id}\'
-        '''
-        self.db.cursor.execute(delete_query)
-
+        self.db.cursor.execute(DELETE_MOVIE_BY_ID, (id))
         self.db.connection.commit()
 
         print(f'Movie with id: {id} was successfully deleted.')
@@ -60,13 +43,7 @@ class MovieGateway:
         return raw_movies
 
     def get_movie_title(self, id):
-        select_query = f'''
-            SELECT title
-                FROM movies
-            WHERE id= \'{id}\'
-        '''
-
-        self.db.cursor.execute(select_query)
+        self.db.cursor.execute(GET_TITLE_BY_ID, (id))
         title = self.db.cursor.fetchone()
         self.db.connection.commit()
 
