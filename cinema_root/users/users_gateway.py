@@ -1,6 +1,7 @@
 from cinema_root.db import Database
 from .models import UserModel
-from .user_queries import SELECT_ALL_USERS
+from .user_queries import (SELECT_ALL_USERS, CREATE_USER, GET_USER_ID, GET_USER_BY_ID,
+                           GET_USER_BY_EMAIL, GET_CLIENT_BY_ID, MAKE_ADMIN_BY_ID, DELETE_USER_BY_ID)
 
 
 class UserGateway:
@@ -14,29 +15,20 @@ class UserGateway:
         hashed_password = self.model.hash_password(password)
 
         # Create User in DB
-        create_query = '''
-            INSERT INTO users (email, password, user_type)
-            VALUES (?, ?, ?);
-        '''
-        self.db.cursor.execute(create_query, (email, hashed_password, 'Client'))
+        self.db.cursor.execute(CREATE_USER, (email, hashed_password, 'Client'))
 
         # Get User ID from DB
-        get_id_query = f'SELECT id FROM users WHERE email= \'{email}\';'
-        self.db.cursor.execute(get_id_query)
-
+        self.db.cursor.execute(GET_USER_ID, (email))
         user_id = self.db.cursor.fetchone()[0]
-
         self.db.connection.commit()
 
         return self.model(user_id=user_id, email=email,
                           password=hashed_password, user_type='Client')
 
     def login(self, *, email, password):  # DONE
-        # Get User from FB
-        get_user_query = f'SELECT * FROM users WHERE email=\'{email}\';'
-        self.db.cursor.execute(get_user_query)
+        # Get User from DB
+        self.db.cursor.execute(GET_USER_BY_EMAIL, (email))
         raw_user = self.db.cursor.fetchone()
-
         self.db.connection.commit()
 
         if raw_user:
@@ -51,14 +43,14 @@ class UserGateway:
 
     def get_user(self, *, id):  # DONE
         # Get User DB
-        get_user_query = f'SELECT * FROM users WHERE id={id};'
-        self.db.cursor.execute(get_user_query)
+        self.db.cursor.execute(GET_USER_BY_ID, (id))
         raw_user = self.db.cursor.fetchone()
         self.db.connection.commit()
+
         if raw_user:
             return self.model(user_id=raw_user[0], email=raw_user[1], password=raw_user[2], user_type=raw_user[3])
         else:
-            raise Exception('User not found.')
+            raise ValueError('User not found.')
 
     def get_all_users(self):  # DONE
         self.db.cursor.execute(SELECT_ALL_USERS)
@@ -74,26 +66,22 @@ class UserGateway:
         return all_users
 
     def promote_user(self, *, id, user_type):  # DONE
-        select_user_query = f'SELECT * FROM users WHERE id ={id};'
-        self.db.cursor.execute(select_user_query)
+        self.db.cursor.execute(GET_CLIENT_BY_ID, (id))
         raw_user = self.db.cursor.fetchone()
 
         if raw_user:
-            update_user_query = f'UPDATE users SET user_type="{user_type}" WHERE id={id};'
-            self.db.cursor.execute(update_user_query)
+            self.db.cursor.execute(MAKE_ADMIN_BY_ID, (user_type, id))
             self.db.connection.commit()
         else:
-            raise Exception('User not found.')
+            raise ValueError('User not found.')
 
     def delete_user(self, *, id):
         # Delete User from DB
-        select_user_query = f'SELECT * FROM users WHERE id ={id};'
-        self.db.cursor.execute(select_user_query)
+        self.db.cursor.execute(GET_USER_BY_ID, (id))
         raw_user = self.db.cursor.fetchone()
 
         if raw_user:
-            delete_user_query = f'DELETE FROM users WHERE id={id};'
-            self.db.cursor.execute(delete_user_query)
+            self.db.cursor.execute(DELETE_USER_BY_ID, (id))
             self.db.connection.commit()
         else:
             raise Exception('User not found.')
