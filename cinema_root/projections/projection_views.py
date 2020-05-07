@@ -19,8 +19,7 @@ class ProjectionView:
     Time: {projection.p_time}
     ------------------''')
 
-    def show_projections_by_movie_id(self):
-        movie_id = get_input('Enter id: ')
+    def show_projections_by_movie_id(self, movie_id):
         projections = self.controller.get_projections_by_movie_id(movie_id)
 
         if not projections:
