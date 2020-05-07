@@ -19,16 +19,32 @@ class ReservationGateway:
 
         occupied = self.db.cursor.fetchone()
 
-        if not occupied:
+        if occupied:
+            raise Exception('Seat is taken.')
+        else:
             add_reservation_query = '''
                 INSERT INTO reservations(user_id, projection_id, row, col)
                 VALUES(?, ?, ?, ?);
             '''
-
+            # fix?
+            # self.db.cursor = self.db.connection.cursor()
             self.db.cursor.execute(add_reservation_query, (user_id, projection_id, row, col))
+
+            get_new_reservation_query = '''
+                SELECT *
+                    FROM reservations
+                    WHERE user_id=? AND projection_id=? AND row=? AND col=?
+            '''
+            self.db.cursor.execute(get_new_reservation_query, (user_id, projection_id, row, col))
+            reservation = self.db.cursor.fetchone()
+
             self.db.connection.commit()
-        else:
-            raise Exception('Seat is taken.')
+            return self.model(
+                reservation_id=reservation[0],
+                user_id=reservation[1],
+                projection_id=reservation[2],
+                row=reservation[3],
+                col=reservation[4])
 
     def delete_reservation(self, id):
         select_user_query = 'SELECT * FROM reservations WHERE id=?;'
@@ -49,7 +65,9 @@ class ReservationGateway:
 
         all_occupied = []
         for seat in raw_occupied:
-            all_occupied.append(self.model(user_id=seat[0], projection_id=seat[1], row=seat[2], col=seat[3]))
+            all_occupied.append(
+                self.model(reservation_id=seat[0], user_id=seat[1], projection_id=seat[2], row=seat[3], col=seat[4])
+            )
 
         return all_occupied
 

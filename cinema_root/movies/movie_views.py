@@ -34,4 +34,7 @@ class AdminMovieView(MovieViews):
 
     def delete_movie(self):
         movie_id = get_input('Enter id of the movie you want to delete: ')
-        self.controller.delete_movie(movie_id)
+        #if self.controller.delete_movie(movie_id):
+        #    print(f'Movie with id = {movie_id} has been deleted successfully!')
+        #else:
+        #    print(f'Something happened! The movie with id = {movie_id} could not be deleted.')
