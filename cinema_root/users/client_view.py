@@ -76,4 +76,4 @@ class ClientView:
         ProjectionView().show_projections_by_movie_id()
 
     def make_reservation(self, *args):
-        ReservationViews().add_reservation()
+        ReservationViews().add_reservation(self.user.user_id)
