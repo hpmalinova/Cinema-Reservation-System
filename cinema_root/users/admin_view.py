@@ -103,7 +103,9 @@ class AdminView:
         print('- delete_projection')
         print('- show_projections')
         print('- show_projections_by_movie_id')
-        print('# help')
+        print('--------------------------------')
+        print('- help')
+        print('- exit')
 
     def add_movie(self, *args):
         try:

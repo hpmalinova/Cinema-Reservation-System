@@ -5,8 +5,8 @@ from .reservations_gateway import ReservationGateway
 class ReservationModel:
     gateway = ReservationGateway()
 
-    def __init__(self, *, reservation_id, user_id, projection_id, row, col):
-        self.reservation_id = reservation_id
+    def __init__(self, *, id, user_id, projection_id, row, col):
+        self.id = id
         self.user_id = user_id
         self.projection_id = projection_id
         self.row = row
@@ -24,17 +24,17 @@ class ReservationModel:
         row = int(row)
         col = int(col)
         cls.validate(row, col)
-        cls.gateway.add_reservation(user_id, projection_id, row, col)
+        raw_reservation = cls.gateway.add_reservation(user_id, projection_id, row, col)
+        return cls(**raw_reservation)
 
     @classmethod
     def get_occupied_seats(cls, projection_id):
-        raw_occupied = cls.gateway.get_occupied_seats()
+        raw_occupied = cls.gateway.get_occupied_seats(projection_id=projection_id)
 
         all_occupied = []
         for raw in raw_occupied:
             reservation_model = cls(**raw)
             all_occupied.append(reservation_model)
-
         return all_occupied
 
     @classmethod
@@ -47,3 +47,7 @@ class ReservationModel:
             all_reservations.append(reservation_model)
 
         return all_reservations
+
+    @classmethod
+    def delete_reservation(cls, id):
+        cls.gateway.delete_reservation(id)

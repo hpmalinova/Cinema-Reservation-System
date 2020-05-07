@@ -22,6 +22,7 @@ class ClientView:
             self.execute_command(command)
             input('\nPress Enter')
             os.system('clear')
+            print("If you don't know what to do, type 'help'")
             command = get_input('>> Your command: ')
             os.system('clear')
 
@@ -51,8 +52,9 @@ class ClientView:
         print('- show_all_movies')
         print('- make_reservation')
         print('- show_projections')
-        print('- show_projections_by_movie_id')
+        print('- show_projections_by_movie_id <id>')
         print('- help')
+        print('- exit')
         print('----------------------------------')
 
     def view_profile(self, *args):
@@ -67,7 +69,9 @@ class ClientView:
         ProjectionView().show_all_projections()
 
     def show_projections_by_movie_id(self, *args):
-        ProjectionView().show_projections_by_movie_id()
+        assert args[0] != [], Exception('get_user takes one argument - <id>')
+        assert int(args[0][0])
+        ProjectionView().show_projections_by_movie_id(int(args[0][0]))
 
     def make_reservation(self, *args):
         ReservationViews().add_reservation(self.user.id)

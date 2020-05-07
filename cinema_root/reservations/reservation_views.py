@@ -94,7 +94,6 @@ class ReservationViews:
 
         occupied_places = self.controller.get_occupied_seats(projection_id)
         occupied_tuples = []
-
         for user in occupied_places:
             occupied_tuples.append((user.row, user.col))
 

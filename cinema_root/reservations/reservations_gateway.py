@@ -38,7 +38,8 @@ class ReservationGateway:
         self.db.connection.commit()
 
     def get_occupied_seats(self, projection_id):
-        self.db.cursor.execute(GET_RESERVATIONS_BY_PROJ_ID, (projection_id))
+        print
+        self.db.cursor.execute(GET_RESERVATIONS_BY_PROJ_ID, (projection_id,))
         raw_occupied = self.db.cursor.fetchall()
 
         self.db.connection.commit()

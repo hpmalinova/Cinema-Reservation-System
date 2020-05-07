@@ -21,7 +21,7 @@ class UserViews:
 
                 if user:
                     print('Success!')
-                    time.sleep(2)
+                    time.sleep(1)
                     if user.user_type == 'Admin':
                         return AdminView(user)
                     elif user.user_type == 'Client':
