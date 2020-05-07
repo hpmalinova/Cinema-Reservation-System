@@ -1,6 +1,7 @@
 from .controllers import UserController
 from cinema_root.movies.movie_views import AdminMovieView
 from cinema_root.projections.projection_views import AdminProjectionView
+from cinema_root.utils import get_input
 
 import os
 
@@ -16,14 +17,14 @@ class AdminView:
         print(f'Welcome to HackCinema, {self.user.email}')
         self.execute_command('help')
 
-        command = self.get_input('>> Your command: ')
+        command = get_input('>> Your command: ')
         os.system('clear')
         while command != 'exit':
             self.execute_command(command)
             input('\nPress Enter')
             os.system('clear')
 
-            command = self.get_input('>> Your command: ')
+            command = get_input('>> Your command: ')
             os.system('clear')
 
         print('Goodbye!')
@@ -103,13 +104,6 @@ class AdminView:
         print('- show_projections')
         print('- show_projections_by_movie_id')
         print('# help')
-
-    @staticmethod
-    def get_input(msg):
-        var = input(msg)
-        while not var:
-            var = input(msg)
-        return var
 
     def add_movie(self, *args):
         try:

@@ -1,5 +1,6 @@
 from .controllers import ReservationController
-from ..movies import MovieViews
+from cinema_root.movies import MovieViews
+from cinema_root.utils import get_input
 import os
 
 # DECORATOR log_info?
@@ -46,13 +47,6 @@ class ReservationViews:
                     else:
                         current_row += ' .'
             print(row + 1, current_row)
-
-    @staticmethod
-    def get_input(msg):
-        var = input(msg)
-        while not var:
-            var = input(msg)
-        return var
 
 
 class AdminReservationView(ReservationViews):

@@ -1,6 +1,7 @@
 from cinema_root.movies.movie_views import MovieViews
 from cinema_root.reservations.reservation_views import ReservationViews
 from cinema_root.projections.projection_views import ProjectionView
+from cinema_root.utils import get_input
 
 import os
 
@@ -15,13 +16,13 @@ class ClientView:
         print(f'Welcome to HackCinema, {self.user.email}')
         self.execute_command('help')
 
-        command = self.get_input('>> Your command: ')
+        command = get_input('>> Your command: ')
         os.system('clear')
         while command != 'exit':
             self.execute_command(command)
             input('\nPress Enter')
             os.system('clear')
-            command = self.get_input('>> Your command: ')
+            command = get_input('>> Your command: ')
             os.system('clear')
 
         print('Goodbye!')
@@ -58,13 +59,6 @@ class ClientView:
         print('User ID: ', self.user.id)
         print('Email: ', self.user.email)
         print('Type: ', self.user.user_type)
-
-    @staticmethod
-    def get_input(msg):
-        var = input(msg)
-        while not var:
-            var = input(msg)
-        return var
 
     def show_all_movies(self, *args):
         MovieViews().show_all_movies()

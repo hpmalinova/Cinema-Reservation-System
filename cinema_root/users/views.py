@@ -1,6 +1,7 @@
 from .controllers import UserController
 from .admin_view import AdminView
 from .client_view import ClientView
+from cinema_root.utils import get_input
 import getpass
 import time
 import os
@@ -12,7 +13,7 @@ class UserViews:
 
     def login(self):
         for i in range(3):
-            email = self.get_input('Email: ')
+            email = get_input('Email: ')
             password = getpass.getpass(prompt='Password: ')
 
             try:
@@ -34,8 +35,8 @@ class UserViews:
     def signup(self):
         user = ''
         while not user:
-            email = self.get_input('Email: ')
-            password = self.get_input('Password: ')
+            email = get_input('Email: ')
+            password = get_input('Password: ')
 
             try:
                 user = self.controller.add_user(email=email, password=password)
@@ -44,10 +45,3 @@ class UserViews:
                 print(str(exc) + '\nTry again!')
             except AssertionError as exc:
                 print(str(exc) + '\nTry again!')
-
-    @staticmethod
-    def get_input(msg):
-        var = input(msg)
-        while not var:
-            var = input(msg)
-        return var
