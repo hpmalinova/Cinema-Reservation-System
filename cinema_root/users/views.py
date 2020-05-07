@@ -1,6 +1,9 @@
 from .controllers import UserController
 from .admin_view import AdminView
 from .client_view import ClientView
+import getpass
+import time
+import os
 
 
 class UserViews:
@@ -10,21 +13,23 @@ class UserViews:
     def login(self):
         for i in range(3):
             email = self.get_input('Email: ')
-            password = self.get_input('Password: ')
+            password = getpass.getpass(prompt='Password: ')
 
             try:
                 user = self.controller.login_user(email=email, password=password)
 
                 if user:
+                    print('Success!')
+                    time.sleep(2)
                     if user.user_type == 'Admin':
                         return AdminView(user)
                     elif user.user_type == 'Client':
                         return ClientView(user)
 
             except Exception as exc:
+                os.system('clear')
                 print(str(exc) + '\nTry again!')
         print('You tried to log in 3 times. No more tries!')
-        return
 
     def signup(self):
         user = ''

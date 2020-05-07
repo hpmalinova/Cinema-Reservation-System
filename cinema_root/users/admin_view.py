@@ -22,6 +22,7 @@ class AdminView:
             self.execute_command(command)
             input('\nPress Enter')
             os.system('clear')
+
             command = self.get_input('>> Your command: ')
             os.system('clear')
 
@@ -56,7 +57,7 @@ class AdminView:
         assert int(args[0][0])
 
         user = self.controller.get_user(id=int(args[0][0]))
-        print(user.user_id, user.email, user.password, user.user_type)
+        print('User ID: ', user.user_id, 'Email: ', user.email, 'Type: ', user.user_type)
 
     def get_all_users(self, *args):
         assert args[0] == [], Exception('get_all_users does not take any arguments')

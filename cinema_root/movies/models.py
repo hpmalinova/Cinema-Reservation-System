@@ -12,3 +12,14 @@ class MovieModel:
     def validate(year, rating):
         validate_year(year)
         validate_rating(rating)
+
+    '''
+    @classmethod
+    def get_all_movies(cls):
+        raw_movies = gateway.get_all_movies()
+        for raw_movie in raw_movies:  # To model
+                movie_model = cls(**raw_movie)
+                all_movies.append(movie_model)
+
+        return all_movies
+    '''

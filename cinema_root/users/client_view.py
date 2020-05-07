@@ -26,13 +26,16 @@ class ClientView:
 
         print('Goodbye!')
 
+    # @staticmethod
     def execute_command(self, command):
         all_commands = {
             'help': self.show_commands, 'view_profile': self.view_profile,
             'show_all_movies': self.show_all_movies,
             'show_projections': self.show_projections,
-            'show_projections_by_movie_id': self.show_projections_by_movie_id
+            'show_projections_by_movie_id': self.show_projections_by_movie_id,
+            'make_reservation': self.make_reservation
         }
+
         command_split = command.split()
 
         if command_split[0] in all_commands:
@@ -71,3 +74,6 @@ class ClientView:
 
     def show_projections_by_movie_id(self, *args):
         ProjectionView().show_projections_by_movie_id()
+
+    def make_reservation(self, *args):
+        ReservationViews().add_reservation()

@@ -1,15 +1,23 @@
 from cinema_root.users.views import UserViews
+import os
 
 
 def welcome():
+    os.system('clear')
     print('Welcome to HackCinema!')
-    command = int(input('Choose a command:\n  1 - log in\n  2 - sign up\n  Input: '))
+    all_commands = ['login', 'signup', 'exit']
+    command = input('Choose a command:\n- login\n- signup\n- exit\nInput: ')
     user_views = UserViews()
 
-    if command == 1:
+    while command not in all_commands:
+        os.system('clear')
+        print(f'Unknown command {command}.')
+        command = input('Choose a command:\n- login\n- signup\n- exit\nInput: ')
+
+    if command == 'login':
+        os.system('clear')
         return user_views.login()
-
-    if command == 2:
+    elif command == 'signup':
+        os.system('clear')
         return user_views.signup()
-
-    raise ValueError(f'Unknown command {command}.')
+    os.system('clear')

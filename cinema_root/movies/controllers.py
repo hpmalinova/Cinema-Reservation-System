@@ -12,4 +12,4 @@ class MovieController:
         return self.gateway.delete_movie(id)
 
     def show_all_movies(self):
-        return self.gateway.show_all_movies()
+        return self.gateway.show_all_movies()  # Must return self.MovieModel.show_all_movies() 
