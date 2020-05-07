@@ -2,7 +2,7 @@ from .controllers import UserController
 from cinema_root.movies.movie_views import AdminMovieView
 from cinema_root.projections.projection_views import AdminProjectionView
 from cinema_root.utils import get_input
-
+from ..utils import BACKGROUND_LINE
 import os
 
 
@@ -14,16 +14,18 @@ class AdminView:
 
     def welcome(self):
         os.system('clear')
-        print(f'Welcome to HackCinema, {self.user.email}')
+        print(f'Welcome to HackCinema, \t\t{self.user.email}')
         self.execute_command('help')
 
         command = get_input('>> Your command: ')
         os.system('clear')
         while command != 'exit':
             self.execute_command(command)
-            input('\nPress Enter')
+            input('\n#  Press Enter')
             os.system('clear')
-
+            print(BACKGROUND_LINE)
+            print("#  If you don't know what to do, type 'help'")
+            print(BACKGROUND_LINE)
             command = get_input('>> Your command: ')
             os.system('clear')
 
@@ -45,28 +47,33 @@ class AdminView:
         if command_split[0] in all_commands:
             all_commands[command_split[0]](command_split[1:])
         else:
-            print(f'Unknown command: {command}. Try again!')
+            print(f'Unknown command: [{command}]. Try again!')
             return False
 
     def view_profile(self, *args):
-        print('User ID: ', self.user.id)
-        print('Email: ', self.user.email)
-        print('Type: ', self.user.user_type)
+        print(BACKGROUND_LINE)
+        print('[User ID]: ', self.user.id)
+        print('[Email]:   ', self.user.email)
+        print('[Type]:    ', self.user.user_type)
+        print(BACKGROUND_LINE)
 
     def get_user(self, *args):
         assert args[0] != [], Exception('get_user takes one argument - <id>')
         assert int(args[0][0])
 
         user = self.controller.get_user(id=int(args[0][0]))
-        print('User ID: ', user.id, 'Email: ', user.email, 'Type: ', user.user_type)
+        print(BACKGROUND_LINE)
+        print('[User ID]: ', user.id, '[Email]: ', user.email, '[Type]: ', user.user_type)
+        print(BACKGROUND_LINE)
 
     def get_all_users(self, *args):
         assert args[0] == [], Exception('get_all_users does not take any arguments')
 
         user_models = self.controller.get_all_users()
-
+        print(BACKGROUND_LINE)
         for user in user_models:
-            print('User ID: ', user.id, 'Email: ', user.email, 'Type: ', user.user_type)
+            print('[User ID]: ', user.id, '[Email]: ', user.email, '[Type]: ', user.user_type)
+        print(BACKGROUND_LINE)
 
     def promote_user(self, *args):
         assert args[0] != [], Exception('change_type_user takes one argument - <id>')
@@ -84,28 +91,30 @@ class AdminView:
 
         self.controller.delete_user(id=int(args[0][0]))
 
-        print(f'User with id = {args[0][0]} deleted successfully!')
+        print(f'[User with id = [{args[0][0]}] deleted successfully!]')
 
     @staticmethod
     def show_commands(*args):
+        print(BACKGROUND_LINE)
         print('# Users')
-        print('- get_user <id>')
-        print('- get_all_users')
-        print('- promote_user <id> <user_type>')
-        print('- delete_user <id>\n')
+        print('     [-] get_user <id>')
+        print('     [-] get_all_users')
+        print('     [-] promote_user <id> <user_type>')
+        print('     [-] delete_user <id>\n')
         print('# Movie')
-        print('- add_movie')
-        print('- show_all_movies')
-        print('- delete_movie\n')
+        print('     [-] add_movie')
+        print('     [-] show_all_movies')
+        print('     [-] delete_movie\n')
         print('# Projections')
-        print('- add_projection')
-        print('- update_projection')
-        print('- delete_projection')
-        print('- show_projections')
-        print('- show_projections_by_movie_id')
-        print('--------------------------------')
-        print('- help')
-        print('- exit')
+        print('     [-] add_projection')
+        print('     [-] update_projection')
+        print('     [-] delete_projection')
+        print('     [-] show_projections')
+        print('     [-] show_projections_by_movie_id')
+        print(BACKGROUND_LINE)
+        print('[|] help')
+        print('[|] exit')
+        print(BACKGROUND_LINE)
 
     def add_movie(self, *args):
         try:

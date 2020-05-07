@@ -2,7 +2,7 @@ from cinema_root.movies.movie_views import MovieViews
 from cinema_root.reservations.reservation_views import ReservationViews
 from cinema_root.projections.projection_views import ProjectionView
 from cinema_root.utils import get_input
-
+from ..utils import BACKGROUND_LINE
 import os
 
 
@@ -20,9 +20,11 @@ class ClientView:
         os.system('clear')
         while command != 'exit':
             self.execute_command(command)
-            input('\nPress Enter')
+            input('\n#  Press Enter')
             os.system('clear')
-            print("If you don't know what to do, type 'help'")
+            print(BACKGROUND_LINE)
+            print("#  If you don't know what to do, type 'help'")
+            print(BACKGROUND_LINE)
             command = get_input('>> Your command: ')
             os.system('clear')
 
@@ -43,24 +45,27 @@ class ClientView:
         if command_split[0] in all_commands:
             all_commands[command_split[0]](command_split[1:])
         else:
-            print(f'Unknown command: {command}. Try again!')
+            print(f'Unknown command: [{command}]. Try again!')
 
     @staticmethod
     def show_commands(*args):
-        print('=============Commands=============')
-        print('- view_profile')
-        print('- show_all_movies')
-        print('- make_reservation')
-        print('- show_projections')
-        print('- show_projections_by_movie_id <id>')
-        print('- help')
-        print('- exit')
-        print('----------------------------------')
+        print(BACKGROUND_LINE)
+        print('=========================Commands============================')
+        print('[-] view_profile')
+        print('[-] show_all_movies')
+        print('[-] make_reservation')
+        print('[-] show_projections')
+        print('[-] show_projections_by_movie_id <id>')
+        print('[-] help')
+        print('[-] exit')
+        print(BACKGROUND_LINE)
 
     def view_profile(self, *args):
-        print('User ID: ', self.user.id)
-        print('Email: ', self.user.email)
-        print('Type: ', self.user.user_type)
+        print(BACKGROUND_LINE)
+        print('[User ID]: ', self.user.id)
+        print('[Email]:   ', self.user.email)
+        print('[Type]:    ', self.user.user_type)
+        print(BACKGROUND_LINE)
 
     def show_all_movies(self, *args):
         MovieViews().show_all_movies()
