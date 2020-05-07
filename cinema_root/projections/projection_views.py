@@ -51,7 +51,7 @@ class AdminProjectionView(ProjectionView):
         movie_id = self.get_input('Enter movie_id: ')
         p_type = self.get_input('Enter projection type: ')
         p_date = self.get_input('Enter projection date /YYYY-MM-DD/ : ')
-        p_time = self.get_input('Enter projection time /HH-MM/ : ')
+        p_time = self.get_input('Enter projection time /HH:MM/ : ')
 
         self.controller.add_projection(movie_id, p_type, p_date, p_time)
 

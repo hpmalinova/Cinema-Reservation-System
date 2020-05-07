@@ -1,18 +1,12 @@
 from cinema_root.db import Database
-from .models import MovieModel
 from .movie_queries import SELECT_ALL_MOVIES
 
 
 class MovieGateway:
     def __init__(self):
-        self.model = MovieModel
         self.db = Database()
 
     def add_movie(self, title, year, rating):
-        year = int(year)
-        rating = float(rating)
-        self.model.validate(year, rating)
-
         # Create Movie in DB
         create_query = '''
             INSERT INTO movies (title, year, rating)
@@ -31,8 +25,6 @@ class MovieGateway:
 
         self.db.connection.commit()
         print(f'Successfully created movie with id={movie_id}')
-        return self.model(movie_id=movie_id, title=title,
-                          year=year, rating=rating)
 
     def delete_movie(self, id):
         # Check if Movie ID exists in DB
@@ -59,17 +51,23 @@ class MovieGateway:
 
         print(f'Movie with id: {id} was successfully deleted.')
 
-    def show_all_movies(self):
+    def get_all_movies(self):
         self.db.cursor.execute(SELECT_ALL_MOVIES)
         raw_movies = self.db.cursor.fetchall()
 
         self.db.connection.commit()
 
-        all_movies = []
+        return raw_movies
 
-        for raw_movie in raw_movies:  # To model
-            movie_model = self.model(movie_id=raw_movie[0], title=raw_movie[1],
-                                     year=raw_movie[2], rating=raw_movie[3])
-            all_movies.append(movie_model)
+    def get_movie_title(self, id):
+        select_query = f'''
+            SELECT title
+                FROM movies
+            WHERE id= \'{id}\'
+        '''
 
-        return all_movies
+        self.db.cursor.execute(select_query)
+        title = self.db.cursor.fetchone()
+        self.db.connection.commit()
+
+        return title
