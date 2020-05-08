@@ -132,9 +132,9 @@ class ReservationViews:
         for reservation in reservations:
             print(BACKGROUND_LINE)
             print(f'[Reservation_ID]: {reservation.id}')
-            print(f'[Projection_ID]: {reservation.projection_id}')
-            print(f'[Row]:           {reservation.row}')
-            print(f'[Col]:           {reservation.col}')
+            print(f'[Projection_ID]:  {reservation.projection_id}')
+            print(f'[Row]:            {reservation.row}')
+            print(f'[Col]:            {reservation.col}')
 
 
 class AdminReservationView(ReservationViews):
