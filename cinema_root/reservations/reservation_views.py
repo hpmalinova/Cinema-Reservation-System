@@ -131,6 +131,7 @@ class ReservationViews:
             print('You have no reservations.')
         for reservation in reservations:
             print(BACKGROUND_LINE)
+            print(f'[Reservation_ID]: {reservation.id}')
             print(f'[Projection_ID]: {reservation.projection_id}')
             print(f'[Row]:           {reservation.row}')
             print(f'[Col]:           {reservation.col}')
@@ -144,7 +145,8 @@ class AdminReservationView(ReservationViews):
         reservations = self.controller.get_all_reservations()
         for reservation in reservations:
             print(BACKGROUND_LINE)
-            print(f'[ID]:            {reservation.user_id}')
+            print(f'[Reservation_ID]: {reservation.id}')
+            print(f'[User_ID]:            {reservation.user_id}')
             print(f'[Projection_ID]: {reservation.projection_id}')
             print(f'[Row]:           {reservation.row}')
             print(f'[Col]:           {reservation.col}')
