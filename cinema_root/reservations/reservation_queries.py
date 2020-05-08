@@ -3,6 +3,18 @@ SELECT_ALL_RESERVATIONS = '''
         FROM reservations
 '''
 
+SELECT_MY_RESERVATIONS = '''
+    SELECT *
+        FROM reservations
+        WHERE user_id=?
+'''
+
+GET_RESERVATION_BY_ID = '''
+    SELECT *
+        FROM reservations
+        WHERE id=?;
+'''
+
 CREATE_QUERY = '''
     INSERT INTO reservations(user_id, projection_id, row, col)
         VALUES(?, ?, ?, ?);

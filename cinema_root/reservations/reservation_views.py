@@ -1,13 +1,10 @@
 from .controllers import ReservationController
 from cinema_root.movies import MovieViews
 from cinema_root.projections import ProjectionView
-from cinema_root.utils import get_input
+from cinema_root.utils import get_input, BACKGROUND_LINE
 from .validation import validate_row, validate_col
-from ..utils import BACKGROUND_LINE
-import os
 
-# DECORATOR log_info?
-# import movies, susdavame obekt i t.n
+import os
 
 
 class ReservationViews:
@@ -86,8 +83,6 @@ class ReservationViews:
         os.system('clear')
         print(BACKGROUND_LINE)
         print('#  [This is your reservation]:')
-        # print(f'Movie: "Movie_Name"')
-        # print('Date and time: Date_Time')
         print('#  [Seats]:', reserved_seats)
         confirm = get_input('#  [Confirm - type "finalize"]: ')
         return confirm == 'finalize'
@@ -125,7 +120,21 @@ class ReservationViews:
         print(BACKGROUND_LINE)
         print('[Hello!]')
         reservation_id = get_input('[Please enter reservation id]: ')
-        self.controller.delete_reservation(int(user_id), int(reservation_id))
+        if self.controller.delete_reservation(int(user_id), int(reservation_id)):
+            print(f'Reservation with id={reservation_id} was successfully deleted.')
+        else:
+            print(f'Oops, something went wrong.\nReservation with id={reservation_id} was not deleted.')
+
+    def show_my_reservations(self, user_id):
+        reservations = self.controller.get_my_reservations(user_id)
+        if not reservations:
+            print('You have no reservations.')
+        for reservation in reservations:
+            print(BACKGROUND_LINE)
+            print(f'[Reservation_ID]: {reservation.id}')
+            print(f'[Projection_ID]: {reservation.projection_id}')
+            print(f'[Row]:           {reservation.row}')
+            print(f'[Col]:           {reservation.col}')
 
 
 class AdminReservationView(ReservationViews):
@@ -136,7 +145,8 @@ class AdminReservationView(ReservationViews):
         reservations = self.controller.get_all_reservations()
         for reservation in reservations:
             print(BACKGROUND_LINE)
-            print(f'[ID]:            {reservation.user_id}')
+            print(f'[Reservation_ID]: {reservation.id}')
+            print(f'[User_ID]:            {reservation.user_id}')
             print(f'[Projection_ID]: {reservation.projection_id}')
             print(f'[Row]:           {reservation.row}')
             print(f'[Col]:           {reservation.col}')

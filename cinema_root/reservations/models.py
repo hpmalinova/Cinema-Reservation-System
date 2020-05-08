@@ -51,3 +51,20 @@ class ReservationModel:
     @classmethod
     def delete_reservation(cls, user_id, reservation_id):
         cls.gateway.delete_reservation(user_id, reservation_id)
+
+    @classmethod
+    def find_reservation(cls, id):
+        reservation = cls.gateway.find_reservation(id)
+        if reservation is not None:
+            return cls(**reservation)
+
+    @classmethod
+    def get_my_reservations(cls, user_id):
+        raw_reservations = cls.gateway.get_my_reservations(user_id)
+
+        all_reservations = []
+        for raw_reservation in raw_reservations:
+            reservation_model = cls(**raw_reservation)
+            all_reservations.append(reservation_model)
+
+        return all_reservations
