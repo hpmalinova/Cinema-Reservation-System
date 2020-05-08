@@ -20,11 +20,17 @@ class ReservationController:
     def add_reservation(self, user_id, projection_id, row, col):
         self.model.add_reservation(user_id, projection_id, row, col)
 
-    def delete_reservation(self, id):
-        self.model.delete_reservation(id)
+    def delete_reservation(self, user_id, reservation_id):
+        self.model.delete_reservation(user_id, reservation_id)
+        # Check if Reservation ID still exists in DB
+        reservation = self.model.find_reservation(reservation_id)
+        return True if reservation is None else False
 
     def get_occupied_seats(self, projection_id):
         return self.model.get_occupied_seats(projection_id)
 
     def get_all_reservations(self):
         return self.model.get_all_reservations()
+
+    def get_my_reservations(self, user_id):
+        return self.model.get_my_reservations(user_id)

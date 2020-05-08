@@ -37,7 +37,9 @@ class ClientView:
             'show_all_movies': self.show_all_movies,
             'show_projections': self.show_projections,
             'show_projections_by_movie_id': self.show_projections_by_movie_id,
-            'make_reservation': self.make_reservation
+            'make_reservation': self.make_reservation,
+            'show_my_reservations': self.show_my_reservations,
+            'delete_reservation': self.delete_reservation
         }
 
         command_split = command.split()
@@ -51,11 +53,13 @@ class ClientView:
     def show_commands(*args):
         print(BACKGROUND_LINE)
         print('=========================Commands============================')
-        print('[-] view_profile')
-        print('[-] show_all_movies')
-        print('[-] make_reservation')
+        print('[-] view_profile\n')
+        print('[-] show_all_movies\n')
         print('[-] show_projections')
-        print('[-] show_projections_by_movie_id <id>')
+        print('[-] show_projections_by_movie_id <id>\n')
+        print('[-] make_reservation')
+        print('[-] show_my_reservations')
+        print('[-] delete_reservation\n')
         print('[-] help')
         print('[-] exit')
         print(BACKGROUND_LINE)
@@ -78,5 +82,13 @@ class ClientView:
         assert int(args[0][0])
         ProjectionView().show_projections_by_movie_id(int(args[0][0]))
 
+    def show_my_reservations(self, *args):
+        ReservationViews().show_my_reservations(self.user.id)
+
     def make_reservation(self, *args):
+        assert args[0] == [], Exception('make_reservation does not take any arguments')
         ReservationViews().add_reservation(self.user.id)
+
+    def delete_reservation(self, *args):
+        assert args[0] == [], Exception('delete_reservation does not take any arguments')
+        ReservationViews().delete_reservation(self.user.id)

@@ -3,6 +3,12 @@ SELECT_ALL_RESERVATIONS = '''
         FROM reservations
 '''
 
+SELECT_MY_RESERVATIONS = '''
+    SELECT *
+        FROM reservations
+        WHERE user_id=?
+'''
+
 CREATE_QUERY = '''
     INSERT INTO reservations(user_id, projection_id, row, col)
         VALUES(?, ?, ?, ?);
@@ -32,7 +38,7 @@ GET_RESERVATIONS_BY_PROJ_ID = '''
         WHERE projection_id=?
 '''
 
-DELETE_RESERVATION_BY_ID = '''
+DELETE_RESERVATION_BY_ID_USER_ID = '''
     DELETE FROM reservations
-        WHERE id=?
+        WHERE id=? AND user_id=?
 '''
