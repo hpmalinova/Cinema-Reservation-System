@@ -1,8 +1,6 @@
 from cinema_root.users.views import UserViews
-from .utils import HACKCINEMA
+from .utils import print_hackcinema, input_command
 import os
-
-ALL_COMMANDS = ['login', 'signup', 'exit']
 
 
 def welcome():
@@ -21,20 +19,3 @@ def welcome():
         print_hackcinema()
         command = input_command()
         os.system('clear')
-
-
-def input_command():
-    command = input('Choose a command:\n[-] login\n[-] signup\n\n[-] exit\n\nInput: ')
-    while command not in ALL_COMMANDS:
-        os.system('clear')
-        print(HACKCINEMA)
-        print('Welcome to HackCinema!\n')
-        print(f'Your last command ({command}) was not recognized.\n')
-        command = input('Choose a command:\n[-] login\n[-] signup\n\n[-] exit\n\nInput: ')
-    return command
-
-
-def print_hackcinema():
-    os.system('clear')
-    print(HACKCINEMA)
-    print('[Welcome to HackCinema!]\n')

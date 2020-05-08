@@ -1,8 +1,29 @@
+import os
+
+
 def get_input(msg):
     var = input(msg)
     while not var:
         var = input(msg)
     return var
+
+
+def input_command():
+    ALL_COMMANDS = ['login', 'signup', 'exit']
+    command = input('Choose a command:\n[-] login\n[-] signup\n\n[-] exit\n\nInput: ')
+    while command not in ALL_COMMANDS:
+        os.system('clear')
+        print(HACKCINEMA)
+        print('Welcome to HackCinema!\n')
+        print(f'Your last command ({command}) was not recognized.\n')
+        command = input('Choose a command:\n[-] login\n[-] signup\n\n[-] exit\n\nInput: ')
+    return command
+
+
+def print_hackcinema():
+    os.system('clear')
+    print(HACKCINEMA)
+    print('[Welcome to HackCinema!]\n')
 
 
 HACKCINEMA = r'''
