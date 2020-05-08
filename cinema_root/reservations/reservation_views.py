@@ -121,6 +121,12 @@ class ReservationViews:
             print('\n#  ---------Reservation [NOT] confirmed. Going back.---------')
         print(BACKGROUND_LINE)
 
+    def delete_reservation(self, user_id):
+        print(BACKGROUND_LINE)
+        print('[Hello!]')
+        reservation_id = get_input('[Please enter reservation id]: ')
+        self.controller.delete_reservation(int(user_id), int(reservation_id))
+
 
 class AdminReservationView(ReservationViews):
     def __init__(self):

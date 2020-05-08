@@ -49,5 +49,5 @@ class ReservationModel:
         return all_reservations
 
     @classmethod
-    def delete_reservation(cls, id):
-        cls.gateway.delete_reservation(id)
+    def delete_reservation(cls, user_id, reservation_id):
+        cls.gateway.delete_reservation(user_id, reservation_id)
