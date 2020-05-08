@@ -20,14 +20,23 @@ class AdminView:
         command = get_input('>> Your command: ')
         os.system('clear')
         while command != 'exit':
-            self.execute_command(command)
-            input('\n#  Press Enter')
-            os.system('clear')
-            print(BACKGROUND_LINE)
-            print("#  If you don't know what to do, type 'help'")
-            print(BACKGROUND_LINE)
-            command = get_input('>> Your command: ')
-            os.system('clear')
+            try:
+                os.system('clear')
+                self.execute_command(command)
+                input('\n#  Press Enter')
+                os.system('clear')
+                print(BACKGROUND_LINE)
+                print("#  If you don't know what to do, type 'help'")
+                print(BACKGROUND_LINE)
+                command = get_input('>> Your command: ')
+                os.system('clear')
+            except Exception as exc:
+                os.system('clear')
+                print(str(exc), '\n')
+                print(BACKGROUND_LINE)
+                print("#  If you don't know what to do, type 'help'")
+                print(BACKGROUND_LINE)
+                command = get_input('>> Your command: ')
 
         print('Goodbye!')
 
