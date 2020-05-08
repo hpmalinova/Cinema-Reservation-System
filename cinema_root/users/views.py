@@ -16,6 +16,7 @@ class UserViews:
         for i in range(3):
             print(HACKCINEMA)
             email = get_input('[Email]: ')
+            print()
             password = getpass.getpass(prompt='[Password]: ')
 
             try:
@@ -39,12 +40,26 @@ class UserViews:
         while not user:
             print(HACKCINEMA)
             email = get_input('[Email]: ')
-            password = get_input('[Password]: ')
+            pw_confirm = ''
+            print()
+            password = getpass.getpass(prompt='[Password]: ')
+            pw_confirm = getpass.getpass(prompt='[Confirm Password]: ')
 
+            while pw_confirm != password:
+                os.system('clear')
+                print(HACKCINEMA)
+                print('[Email]:', email)
+                print("[Passwords didn't match. Enter password again!]")
+                password = getpass.getpass(prompt='[Password]: ')
+                pw_confirm = getpass.getpass(prompt='[Confirm Password]: ')
             try:
                 user = self.controller.add_user(email=email, password=password)
+                print('\n#  ------------------------Success!--------------------------')
+                time.sleep(1)
                 return ClientView(user)
             except ValueError as exc:
+                os.system('clear')
                 print(str(exc) + '\nTry again!')
             except AssertionError as exc:
+                os.system('clear')
                 print(str(exc) + '\nTry again!')
