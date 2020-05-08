@@ -26,6 +26,12 @@ def print_hackcinema():
     print('[Welcome to HackCinema!]\n')
 
 
+def show_help_exists():
+    print(BACKGROUND_LINE)
+    print("#  If you don't know what to do, type 'help'")
+    print(BACKGROUND_LINE)
+
+
 HACKCINEMA = r'''
 #  -_---_------------_----_____-_----------------------------
 #  |-|-|-|----------|-|--/--__-(_)---------------------------

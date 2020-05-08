@@ -29,7 +29,6 @@ class UserViews:
                         return AdminView(user)
                     elif user.user_type == 'Client':
                         return ClientView(user)
-
             except Exception as exc:
                 os.system('clear')
                 print(str(exc) + '\nTry again!')
@@ -40,7 +39,6 @@ class UserViews:
         while not user:
             print(HACKCINEMA)
             email = get_input('[Email]: ')
-            pw_confirm = ''
             print()
             password = getpass.getpass(prompt='[Password]: ')
             pw_confirm = getpass.getpass(prompt='[Confirm Password]: ')
@@ -49,7 +47,7 @@ class UserViews:
                 os.system('clear')
                 print(HACKCINEMA)
                 print('[Email]:', email)
-                print("[Passwords didn't match. Enter password again!]")
+                print("\n[Passwords didn't match. Enter password again!]\n")
                 password = getpass.getpass(prompt='[Password]: ')
                 pw_confirm = getpass.getpass(prompt='[Confirm Password]: ')
             try:

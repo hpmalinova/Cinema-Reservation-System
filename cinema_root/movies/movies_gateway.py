@@ -20,19 +20,15 @@ class MovieGateway:
         print(f'Successfully created movie with id={movie_id}')
 
     def delete_movie(self, id):
-        # Check if Movie ID exists in DB
-        self.db.cursor.execute(GET_MOVIE_BY_ID, (id))
-        movie_id = self.db.cursor.fetchone()[0]
-
-        if not movie_id:
-            print('You can`t delete non existing movie.')
-            return
-
-        # Delete Movie in DB by id
         self.db.cursor.execute(DELETE_MOVIE_BY_ID, (id))
         self.db.connection.commit()
 
-        print(f'Movie with id: {id} was successfully deleted.')
+    def get_movie(self, id):
+        self.db.cursor.execute(GET_MOVIE_BY_ID, (id,))
+        movie = self.db.cursor.fetchone()
+        self.db.connection.commit()
+
+        return movie
 
     def get_all_movies(self):
         self.db.cursor.execute(SELECT_ALL_MOVIES)

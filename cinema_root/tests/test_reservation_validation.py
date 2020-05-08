@@ -1,5 +1,6 @@
 import unittest
-from ..reservations.validation import (
+
+from cinema_root.reservations.validation import (
     validate_row, validate_col,
     FIRST_ROW, FIRST_COL,
     LAST_ROW, LAST_COL

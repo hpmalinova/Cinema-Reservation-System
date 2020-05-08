@@ -9,9 +9,10 @@ class MovieController:
         self.model.add_movie(title, year, rating)
 
     def delete_movie(self, id):
-        return self.model.delete_movie(id)
-        # movie_object = self.model.find_by_id(id)
-        # return True if movie_object is None else False
+        self.model.delete_movie(id)
+        # Check if Movie still exists in DB
+        movie = self.model.get_movie(id)
+        return True if movie is None else False
 
     def get_all_movies(self):
         return self.model.get_all_movies()

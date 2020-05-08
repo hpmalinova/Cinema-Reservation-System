@@ -1,8 +1,8 @@
 from .controllers import UserController
 from cinema_root.movies.movie_views import AdminMovieView
 from cinema_root.projections.projection_views import AdminProjectionView
-from cinema_root.utils import get_input
-from ..utils import BACKGROUND_LINE
+from cinema_root.utils import get_input, show_help_exists, BACKGROUND_LINE
+
 import os
 
 
@@ -25,22 +25,17 @@ class AdminView:
                 self.execute_command(command)
                 input('\n#  Press Enter')
                 os.system('clear')
-                print(BACKGROUND_LINE)
-                print("#  If you don't know what to do, type 'help'")
-                print(BACKGROUND_LINE)
+                show_help_exists()
                 command = get_input('>> Your command: ')
                 os.system('clear')
             except Exception as exc:
                 os.system('clear')
                 print(str(exc), '\n')
-                print(BACKGROUND_LINE)
-                print("#  If you don't know what to do, type 'help'")
-                print(BACKGROUND_LINE)
+                show_help_exists()
                 command = get_input('>> Your command: ')
 
         print('Goodbye!')
 
-    # @staticmethod
     def execute_command(self, command):
         all_commands = {
             'view_profile': self.view_profile, 'help': self.show_commands,
@@ -57,7 +52,6 @@ class AdminView:
             all_commands[command_split[0]](command_split[1:])
         else:
             print(f'Unknown command: [{command}]. Try again!')
-            return False
 
     def view_profile(self, *args):
         print(BACKGROUND_LINE)
@@ -70,10 +64,15 @@ class AdminView:
         assert args[0] != [], Exception('get_user takes one argument - <id>')
         assert int(args[0][0])
 
-        user = self.controller.get_user(id=int(args[0][0]))
-        print(BACKGROUND_LINE)
-        print('[User ID]: ', user.id, '[Email]: ', user.email, '[Type]: ', user.user_type)
-        print(BACKGROUND_LINE)
+        user_id = int(args[0][0])
+        user = self.controller.get_user(id=user_id)
+
+        if user:
+            print(BACKGROUND_LINE)
+            print('[User ID]: ', user.id, '[Email]: ', user.email, '[Type]: ', user.user_type)
+            print(BACKGROUND_LINE)
+        else:
+            print(f'There is no user with id={user_id}.')
 
     def get_all_users(self, *args):
         assert args[0] == [], Exception('get_all_users does not take any arguments')
@@ -98,9 +97,10 @@ class AdminView:
         assert args[0] != [], Exception('delete_user takes one argument - <id>')
         assert int(args[0][0])
 
-        self.controller.delete_user(id=int(args[0][0]))
-
-        print(f'[User with id = [{args[0][0]}] deleted successfully!]')
+        if self.controller.delete_user(id=int(args[0][0])):
+            print(f'[User with id = [{args[0][0]}] deleted successfully!]')
+        else:
+            print(f'[Oops, something happend. User with id = [{args[0][0]}] was not deleted!]')
 
     @staticmethod
     def show_commands(*args):
@@ -110,7 +110,7 @@ class AdminView:
         print('     [-] get_all_users')
         print('     [-] promote_user <id> <user_type>')
         print('     [-] delete_user <id>\n')
-        print('# Movie')
+        print('# Movies')
         print('     [-] add_movie')
         print('     [-] show_all_movies')
         print('     [-] delete_movie\n')
@@ -126,10 +126,7 @@ class AdminView:
         print(BACKGROUND_LINE)
 
     def add_movie(self, *args):
-        try:
-            AdminMovieView().add_movie()
-        except ValueError as exc:
-            print(str(exc) + '\nTry again.')
+        AdminMovieView().add_movie()
 
     def delete_movie(self, *args):
         AdminMovieView().delete_movie()

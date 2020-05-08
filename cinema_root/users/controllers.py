@@ -22,3 +22,6 @@ class UserController:
 
     def delete_user(self, id):
         self.model.delete_user(id=id)
+        user = self.model.get_user(id=id)
+
+        return True if user is None else False

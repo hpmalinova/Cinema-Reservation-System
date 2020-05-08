@@ -121,9 +121,9 @@ class ReservationViews:
         print('[Hello!]')
         reservation_id = get_input('[Please enter reservation id]: ')
         if self.controller.delete_reservation(int(user_id), int(reservation_id)):
-            print(f'Reservation with id={reservation_id} was successfully deleted.')
+            print(f'[Reservation with id={reservation_id} was successfully deleted.]')
         else:
-            print(f'Oops, something went wrong.\nReservation with id={reservation_id} was not deleted.')
+            print(f'[Oops, something went wrong.\nReservation with id={reservation_id} was not deleted.]')
 
     def show_my_reservations(self, user_id):
         reservations = self.controller.get_my_reservations(user_id)

@@ -41,3 +41,9 @@ class MovieModel:
     @classmethod
     def delete_movie(cls, id):
         cls.gateway.delete_movie(id)
+
+    @classmethod
+    def get_movie(cls, id):
+        movie = cls.gateway.get_movie(id)
+        if movie is not None:
+            return cls(**movie)

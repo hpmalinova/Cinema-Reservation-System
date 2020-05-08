@@ -1,5 +1,6 @@
 import unittest
-from ..projections.validation import (
+
+from cinema_root.projections.validation import (
     validate_type,
     validate_date_and_time,
     ALL_TYPES

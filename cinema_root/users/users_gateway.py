@@ -1,6 +1,6 @@
 from cinema_root.db import Database
-from .user_queries import (SELECT_ALL_USERS, CREATE_USER, GET_USER_BY_ID, GET_USER_ID,
-                           GET_USER_BY_EMAIL, GET_CLIENT_BY_ID, MAKE_ADMIN_BY_ID, DELETE_USER_BY_ID)
+from .user_queries import (SELECT_ALL_USERS, CREATE_USER, GET_USER_BY_ID, GET_USER_BY_EMAIL,
+                           GET_CLIENT_BY_ID, MAKE_ADMIN_BY_ID, DELETE_USER_BY_ID)
 
 
 class UserGateway:
@@ -33,15 +33,11 @@ class UserGateway:
             raise ValueError('User not found.')
 
     def get_user(self, *, id):
-        # Get User DB
         self.db.cursor.execute(GET_USER_BY_ID, (id,))
         raw_user = self.db.cursor.fetchone()
         self.db.connection.commit()
 
-        if raw_user:
-            return raw_user
-        else:
-            raise ValueError('User not found.')
+        return raw_user
 
     def get_all_users(self):
         self.db.cursor.execute(SELECT_ALL_USERS)
@@ -62,12 +58,5 @@ class UserGateway:
             raise ValueError('User was not found.')
 
     def delete_user(self, *, id):
-        # Delete User from DB
-        self.db.cursor.execute(GET_USER_ID, (id,))
-        user_id = self.db.cursor.fetchone()[0]
-
-        if user_id:
-            self.db.cursor.execute(DELETE_USER_BY_ID, (id,))
-            self.db.connection.commit()
-        else:
-            raise Exception(f'User with id={id} was not found.')
+        self.db.cursor.execute(DELETE_USER_BY_ID, (id,))
+        self.db.connection.commit()

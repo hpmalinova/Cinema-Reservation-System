@@ -53,7 +53,8 @@ class UserModel:
     @classmethod
     def get_user(cls, *, id):
         raw_user = cls.gateway.get_user(id=id)
-        return cls(**raw_user)
+        if raw_user is not None:
+            return cls(**raw_user)
 
     @classmethod
     def promote_user(cls, *, id, user_type):

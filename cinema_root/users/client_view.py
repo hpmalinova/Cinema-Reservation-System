@@ -1,8 +1,8 @@
 from cinema_root.movies.movie_views import MovieViews
 from cinema_root.reservations.reservation_views import ReservationViews
 from cinema_root.projections.projection_views import ProjectionView
-from cinema_root.utils import get_input
-from ..utils import BACKGROUND_LINE
+from cinema_root.utils import get_input, BACKGROUND_LINE, show_help_exists
+
 import os
 
 
@@ -24,17 +24,13 @@ class ClientView:
                 self.execute_command(command)
                 input('\n#  Press Enter')
                 os.system('clear')
-                print(BACKGROUND_LINE)
-                print("#  If you don't know what to do, type 'help'")
-                print(BACKGROUND_LINE)
+                show_help_exists()
                 command = get_input('>> Your command: ')
                 os.system('clear')
             except Exception as exc:
                 os.system('clear')
                 print(str(exc), '\n')
-                print(BACKGROUND_LINE)
-                print("#  If you don't know what to do, type 'help'")
-                print(BACKGROUND_LINE)
+                show_help_exists()
                 command = get_input('>> Your command: ')
 
         print('Goodbye!')

@@ -1,6 +1,5 @@
 from .controllers import MovieController
-from cinema_root.utils import get_input
-from ..utils import BACKGROUND_LINE
+from cinema_root.utils import get_input, BACKGROUND_LINE
 
 
 class MovieViews:
@@ -33,7 +32,8 @@ class AdminMovieView(MovieViews):
 
     def delete_movie(self):
         movie_id = get_input('[Enter id of the movie you want to delete]: ')
-        #if self.controller.delete_movie(movie_id):
-        #    print(f'Movie with id = {movie_id} has been deleted successfully!')
-        #else:
-        #    print(f'Something happened! The movie with id = {movie_id} could not be deleted.')
+
+        if self.controller.delete_movie(movie_id):
+            print(f'[Movie with id = {movie_id} was successfully deleted.]')
+        else:
+            print(f'[Oops, something went wrong.\nMovie with id={movie_id} was not deleted.]')
