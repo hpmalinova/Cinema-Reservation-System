@@ -2,6 +2,7 @@ from .controllers import UserController
 from .admin_view import AdminView
 from .client_view import ClientView
 from cinema_root.utils import get_input
+from ..utils import HACKCINEMA
 import getpass
 import time
 import os
@@ -13,14 +14,15 @@ class UserViews:
 
     def login(self):
         for i in range(3):
-            email = get_input('Email: ')
-            password = getpass.getpass(prompt='Password: ')
+            print(HACKCINEMA)
+            email = get_input('[Email]: ')
+            password = getpass.getpass(prompt='[Password]: ')
 
             try:
                 user = self.controller.login_user(email=email, password=password)
 
                 if user:
-                    print('Success!')
+                    print('\n#  ------------------------Success!--------------------------')
                     time.sleep(1)
                     if user.user_type == 'Admin':
                         return AdminView(user)
@@ -35,8 +37,9 @@ class UserViews:
     def signup(self):
         user = ''
         while not user:
-            email = get_input('Email: ')
-            password = get_input('Password: ')
+            print(HACKCINEMA)
+            email = get_input('[Email]: ')
+            password = get_input('[Password]: ')
 
             try:
                 user = self.controller.add_user(email=email, password=password)

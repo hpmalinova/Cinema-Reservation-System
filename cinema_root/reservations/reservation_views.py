@@ -3,6 +3,7 @@ from cinema_root.movies import MovieViews
 from cinema_root.projections import ProjectionView
 from cinema_root.utils import get_input
 from .validation import validate_row, validate_col
+from ..utils import BACKGROUND_LINE
 import os
 
 # DECORATOR log_info?
@@ -14,24 +15,27 @@ class ReservationViews:
         self.controller = ReservationController()
 
     def _get_reservation_info(self):
-        print('Hello!')
+        print(BACKGROUND_LINE)
+        print('[Hello!]')
         movie_view = MovieViews()
-        num_of_tickets = get_input('Please enter number of tickets: ')
+        num_of_tickets = get_input('[Please enter number of tickets]: ')
         os.system('clear')
-        print('Current movies:')
+        print('[Current movies]:')
         movie_view.show_all_movies()
-        movie_id = get_input('Choose a movie: ')
+        movie_id = get_input('[Choose a movie]: ')
         os.system('clear')
-        print('Projections for the movie:')
+        print('[Projections for the movie]:')
         projection_view = ProjectionView()
         projection_view.show_projections_by_movie_id(movie_id)
-        projection_id = get_input('Choose a projection: ')
+        projection_id = get_input('[Choose a projection]: ')
         os.system('clear')
 
         return (num_of_tickets, movie_id, projection_id)
 
     def _print_movie_theater(self, occupied_tuples):
-        print('Available seats (marked with a dot):')
+        print(BACKGROUND_LINE)
+        print('#  [Available seats (marked with a dot)]:')
+        print(BACKGROUND_LINE)
         print('   1 2 3 4 5 6 7 8 9 10')
         for row in range(1, 11):
             current_row = ''
@@ -47,13 +51,14 @@ class ReservationViews:
                     else:
                         current_row += ' .'
             print(row, current_row)
+        print(BACKGROUND_LINE)
 
     def _reserve_seats(self, occupied_tuples, num_of_tickets):
         ticket = 0
         seats = []
         while ticket != int(num_of_tickets):
             ticket += 1
-            new_reservation = get_input(f'\nChoose seat {ticket} <n, m>: ')
+            new_reservation = get_input(f'\n[Choose seat [{ticket}] <n, m>]: ')
             row_col = new_reservation.split(', ')
             curr_row = int(row_col[0])
             curr_col = int(row_col[1])
@@ -67,23 +72,24 @@ class ReservationViews:
                 except Exception as exc:
                     ticket -= 1
                     print(str(exc))
-                    print('Try again!')
+                    print('[Try again!]')
                     if (curr_row, curr_col) in occupied_tuples:
                         occupied_tuples.pop()
             else:
-                print('Seat is taken.')
-                print('Try again!')
+                print('[Seat is taken.]')
+                print('[Try again!]')
                 ticket -= 1
 
         return seats
 
     def _confirmation(self, movie_id, projection_id, reserved_seats):
         os.system('clear')
-        print('This is your reservation:')
-        print(f'Movie: "Movie_Name"')
-        print('Date and time: Date_Time')
-        print('Seats', reserved_seats)
-        confirm = get_input('Confirm - type "finalize": ')
+        print(BACKGROUND_LINE)
+        print('#  [This is your reservation]:')
+        # print(f'Movie: "Movie_Name"')
+        # print('Date and time: Date_Time')
+        print('#  [Seats]:', reserved_seats)
+        confirm = get_input('#  [Confirm - type "finalize"]: ')
         return confirm == 'finalize'
 
     def add_reservation(self, user_id):
@@ -106,13 +112,14 @@ class ReservationViews:
             reserved_seats += f'{seat} '
 
         confirmed = self._confirmation(movie_id, projection_id, reserved_seats)
-
+        print(BACKGROUND_LINE)
         if confirmed:
             for seat in seats:
                 self.controller.add_reservation(user_id, projection_id, seat[0], seat[1])
-            print('Thanks.')
+            print('\n#  -----------------------Thank you!-------------------------')
         else:
-            print('Reservation not confirmed. Going back.')
+            print('\n#  ---------Reservation [NOT] confirmed. Going back.---------')
+        print(BACKGROUND_LINE)
 
 
 class AdminReservationView(ReservationViews):
@@ -122,9 +129,8 @@ class AdminReservationView(ReservationViews):
     def get_all_reservations(self):
         reservations = self.controller.get_all_reservations()
         for reservation in reservations:
-            print('------------------')
-            print(f'ID: {reservation.user_id}')
-            print(f'Projection_ID: {reservation.projection_id}')
-            print(f'Row: {reservation.row}')
-            print(f'Col: {reservation.col}')
-            print('------------------')
+            print(BACKGROUND_LINE)
+            print(f'[ID]:            {reservation.user_id}')
+            print(f'[Projection_ID]: {reservation.projection_id}')
+            print(f'[Row]:           {reservation.row}')
+            print(f'[Col]:           {reservation.col}')
