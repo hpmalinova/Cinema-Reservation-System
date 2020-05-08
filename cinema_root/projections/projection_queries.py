@@ -25,9 +25,28 @@ GET_PROJECTION_BY_ID = '''
         WHERE p_id=?;
 '''
 
-UPDATE_PROJECTION = '''
+GET_PROJECTION_BY_PID = '''
+    SELECT *
+        FROM projections
+        WHERE p_id=?;
+'''
+
+
+UPDATE_PROJECTION_TYPE = '''
     UPDATE projections
-        SET ?=?
+        SET p_type=?
+        WHERE p_id=?;
+'''
+
+UPDATE_PROJECTION_DATE = '''
+    UPDATE projections
+        SET p_date=?
+        WHERE p_id=?;
+'''
+
+UPDATE_PROJECTION_TIME = '''
+    UPDATE projections
+        SET p_time=?
         WHERE p_id=?;
 '''
 

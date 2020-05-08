@@ -27,13 +27,12 @@ class ReservationGateway:
     def delete_reservation(self, user_id, reservation_id):
         self.db.cursor.execute(DELETE_RESERVATION_BY_ID_USER_ID, (reservation_id, user_id))
         self.db.connection.commit()
-        # self.db.connection.close()
 
-    # NEW
     def find_reservation(self, id):
         self.db.cursor.execute(GET_RESERVATION_BY_ID, (id,))
         reservation = self.db.cursor.fetchone()
-        # self.db.connection.close()
+        self.db.connection.commit()
+
         return reservation
 
     def get_occupied_seats(self, projection_id):

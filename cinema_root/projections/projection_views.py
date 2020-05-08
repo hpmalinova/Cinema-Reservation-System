@@ -42,7 +42,7 @@ class AdminProjectionView(ProjectionView):
         movie_id = get_input('[Enter movie_id]: ')
         p_type = get_input('[Enter projection type]: ')
         p_date = get_input('[Enter projection date /YYYY-MM-DD/]: ')
-        p_time = get_input('[Enter projection time /HH:MM/]: ')
+        p_time = get_input('[Enter projection time /HH-MM/]: ')
 
         self.controller.add_projection(movie_id, p_type, p_date, p_time)
 
@@ -54,9 +54,12 @@ class AdminProjectionView(ProjectionView):
     def update_projection(self):
         print(BACKGROUND_LINE)
         projection_id = get_input('[Enter projection id]: ')
-        what_to_update = self._get_to_update('[Enter what you want to update /p_type, p_date, p_time/]:')
+        what_to_update = self._get_to_update('[Enter what you want to update /type, date, time/]:')
         new_value = get_input('[Enter new value]: ')
-        self.controller.update_projection(projection_id, what_to_update, new_value)
+        if self.controller.update_projection(projection_id, what_to_update, new_value):
+            print(f'Projection with id={projection_id} was successfully updated.')
+        else:
+            print(f'Oops, something went wrong.\nProjection with id={projection_id} was not updated.')
 
     def _get_to_update(self, msg):
         what_to_update = input(msg)

@@ -1,7 +1,7 @@
 from datetime import datetime
 
 ALL_TYPES = ['2D', '3D', '4DX']
-ALL_UPDATES = ['p_type', 'p_date', 'p_time']
+ALL_UPDATES = ['type', 'date', 'time']
 
 
 def validate_type(p_type):

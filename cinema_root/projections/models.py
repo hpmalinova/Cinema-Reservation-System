@@ -18,6 +18,12 @@ class ProjectionModel:
         validate_date_and_time(p_date, p_time)
 
     @classmethod
+    def get_projection_by_id(cls, p_id):
+        projection = cls.gateway.get_projection_by_id(p_id)
+        if projection is not None:
+            return cls(**projection)
+
+    @classmethod
     def get_all_projections(cls):
         raw_projections = cls.gateway.get_all_projections()
 
