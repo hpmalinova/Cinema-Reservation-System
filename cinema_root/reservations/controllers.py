@@ -20,8 +20,8 @@ class ReservationController:
     def add_reservation(self, user_id, projection_id, row, col):
         self.model.add_reservation(user_id, projection_id, row, col)
 
-    def delete_reservation(self, id):
-        self.model.delete_reservation(id)
+    def delete_reservation(self, user_id, reservation_id):
+        self.model.delete_reservation(user_id, reservation_id)
 
     def get_occupied_seats(self, projection_id):
         return self.model.get_occupied_seats(projection_id)

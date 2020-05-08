@@ -20,10 +20,10 @@ GET_RESERVATION_BY_USER_ID_PROJ_ID_ROW_COL = '''
         WHERE user_id=? AND projection_id=? AND row=? AND col=?
 '''
 
-GET_RESERVATION_BY_ID = '''
+GET_RESERVATION_BY_ID_USER_ID = '''
     SELECT *
         FROM reservations
-        WHERE id=?
+        WHERE id=? and user_id=?
 '''
 
 GET_RESERVATIONS_BY_PROJ_ID = '''
@@ -32,7 +32,7 @@ GET_RESERVATIONS_BY_PROJ_ID = '''
         WHERE projection_id=?
 '''
 
-DELETE_RESERVATION_BY_ID = '''
+DELETE_RESERVATION_BY_ID_USER_ID = '''
     DELETE FROM reservations
-        WHERE id=?
+        WHERE id=? AND user_id=?
 '''
