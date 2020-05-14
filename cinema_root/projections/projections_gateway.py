@@ -1,4 +1,4 @@
-from cinema_root.db import Database
+from cinema_root.db import Database, Projection
 from .projection_queries import (SELECT_ALL_PROJECTIONS, CREATE_PROJECTION, GET_PROJECTION_ID, DELETE_PROJECTION_BY_ID,
                                  GET_PROJECTION_BY_ID, UPDATE_PROJECTION_TYPE, UPDATE_PROJECTION_DATE,
                                  UPDATE_PROJECTION_TIME, GET_PROJECTION_BY_MOVIE_ID, GET_PROJECTION_BY_PID)
@@ -8,12 +8,23 @@ class ProjectionGateway:
     def __init__(self):
         self.db = Database
 
-    def get_all_projections(self):
-        self.db.cursor.execute(SELECT_ALL_PROJECTIONS)
-        raw_projections = self.db.cursor.fetchall()
-        self.db.connection.commit()
+    def get_all_projections(self):  # DONE
+        session = self.db.create_session()
+        raw_projections_dict = []
 
-        return raw_projections
+        try:
+            raw_projections = session.query(Projection)
+        except Exception:
+            session.close()
+            return False
+
+        for raw_projection in raw_projections:
+            raw_dict = raw_projection.__dict__
+            del raw_dict['_sa_instance_state']
+            raw_projections_dict.append(raw_dict)
+
+        session.close()
+        return raw_projections_dict
 
     def add_projection(self, movie_id, p_type, p_date, p_time):
         # Create Projection in DB
@@ -26,26 +37,36 @@ class ProjectionGateway:
 
         print(f'Successfully created projection with id={p_id}')
 
-    def delete_projection(self, p_id):
-        # Check if Projection ID exists in DB
-        projection_id = self.get_projection_id(p_id)
+    def delete_projection(self, p_id):  # DONE?
+        session = self.db.create_session()
 
-        if not projection_id:
-            print('You can`t delete non existing projection.')
-            return
+        try:
+            session.query(Projection).filter(Projection.p_id == p_id).one()
+        except Exception:
+            session.close()
+            return False
 
-        # Delete Projection in DB by id
-        self.db.cursor.execute(DELETE_PROJECTION_BY_ID, (p_id,))
-        self.db.connection.commit()
+        session.query(Projection).filter(Projection.p_id == p_id).delete()
+
+        session.commit()
+        session.close()
 
         print(f'Projection with id: {p_id} was successfully deleted.')
 
-    def get_projection_id(self, p_id):
-        self.db.cursor.execute(GET_PROJECTION_BY_ID, (p_id, ))
-        projection_id = self.db.cursor.fetchone()[0]
-        self.db.connection.commit()
+    def get_projection_id(self, p_id):  # DONE?, ама... WTF??? Защо ни трябва това? :D
+        session = self.db.create_session()
 
-        return projection_id
+        try:
+            raw_projection = session.query(Projection).filter(Projection.p_id == p_id).one()
+        except Exception:
+            session.close()
+            return False
+
+        raw_dict = raw_projection.__dict__
+        del raw_dict['_sa_instance_state']
+
+        session.close()
+        return raw_dict["p_id"]
 
     def update_projection(self, p_id, to_upd, new_value):
         # projection_id = self.get_projection_id(p_id)
@@ -64,16 +85,35 @@ class ProjectionGateway:
 
         # print(f'Projection with id: {p_id} was successfully updated.')
 
-    def get_projections_by_movie_id(self, movie_id):
-        self.db.cursor.execute(GET_PROJECTION_BY_MOVIE_ID, (movie_id,))
-        raw_projections = self.db.cursor.fetchall()
-        self.db.connection.commit()
+    def get_projections_by_movie_id(self, movie_id):  # DONE
+        session = self.db.create_session()
+        raw_projections_dict = []
 
-        return raw_projections
+        try:
+            raw_projections = session.query(Projection).filter(Projection.movie_id == movie_id)
+        except Exception:
+            session.close()
+            return False
 
-    def get_projection_by_id(self, p_id):
-        self.db.cursor.execute(GET_PROJECTION_BY_PID, (p_id,))
-        projection = self.db.cursor.fetchone()
-        self.db.connection.commit()
+        for raw_projection in raw_projections:
+            raw_dict = raw_projection.__dict__
+            del raw_dict['_sa_instance_state']
+            raw_projections_dict.append(raw_dict)
 
-        return projection
+        session.close()
+        return raw_projections_dict
+
+    def get_projection_by_id(self, p_id):  # DONE?
+        session = self.db.create_session()
+
+        try:
+            raw_projection = session.query(Projection).filter(Projection.p_id == p_id).one()
+        except Exception:
+            session.close()
+            return False
+
+        raw_dict = raw_projection.__dict__
+        del raw_dict['_sa_instance_state']
+
+        session.close()
+        return raw_dict
