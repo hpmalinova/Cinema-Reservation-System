@@ -1,4 +1,4 @@
-from cinema_root.db import Database
+from cinema_root.db import Database, Reservation
 from .reservation_queries import (SELECT_ALL_RESERVATIONS, CREATE_QUERY, GET_RESERVATION_BY_PROJ_ID_ROW_COL,
                                   GET_RESERVATION_BY_USER_ID_PROJ_ID_ROW_COL, GET_RESERVATION_BY_ID,
                                   GET_RESERVATIONS_BY_PROJ_ID, DELETE_RESERVATION_BY_ID_USER_ID, SELECT_MY_RESERVATIONS)
@@ -6,56 +6,110 @@ from .reservation_queries import (SELECT_ALL_RESERVATIONS, CREATE_QUERY, GET_RES
 
 class ReservationGateway:
     def __init__(self):
-        self.db = Database()
+        self.db = Database
 
-    def add_reservation(self, user_id, projection_id, row, col):
-        self.db.cursor.execute(GET_RESERVATION_BY_PROJ_ID_ROW_COL, (projection_id, row, col))
+    def add_reservation(self, user_id, projection_id, row, col):  # DONE?
+        session = self.db.create_session()
 
-        occupied = self.db.cursor.fetchone()
+        try:
+            session.query(Reservation).filter(Reservation.projection_id == projection_id)\
+                                      .filter(Reservation.row == row)\
+                                      .filter(Reservation.col == col)\
+                                      .one()
+        except Exception:
+            session.close()
+            return False
 
-        if occupied:
-            raise Exception('Seat is taken.')
-        else:
-            self.db.cursor.execute(CREATE_QUERY, (user_id, projection_id, row, col))
-            self.db.cursor.execute(GET_RESERVATION_BY_USER_ID_PROJ_ID_ROW_COL, (user_id, projection_id, row, col))
-            raw_reservation = self.db.cursor.fetchone()
+        session.add_all([
+            Reservation(user_id=user_id, projection_id=projection_id, row=row, col=col)
+        ])
+        session.commit()
 
-            self.db.connection.commit()
+        raw_reservation = session.query(Reservation).filter(Reservation.user_id == user_id)\
+                                                    .filter(Reservation.projection_id == projection_id)\
+                                                    .filter(Reservation.row == row)\
+                                                    .filter(Reservation.col == col)\
+                                                    .one()
 
-            return raw_reservation
+        raw_dict = raw_reservation.__dict__
+        del raw_dict['_sa_instance_state']
 
-    def delete_reservation(self, user_id, reservation_id):
-        self.db.cursor.execute(DELETE_RESERVATION_BY_ID_USER_ID, (reservation_id, user_id))
-        self.db.connection.commit()
+        session.close()
+        return raw_dict
 
-    def find_reservation(self, id):
-        self.db.cursor.execute(GET_RESERVATION_BY_ID, (id,))
-        reservation = self.db.cursor.fetchone()
-        self.db.connection.commit()
+    def delete_reservation(self, user_id, reservation_id):  # DONE?
+        session = self.db.create_session()
+        session.query(Reservation).filter(Reservation.id == reservation_id)\
+                                  .filter(Reservation.user_id == user_id)\
+                                  .delete()
+        session.commit()
+        session.close()
 
-        return reservation
+    def find_reservation(self, id):  # DONE?
+        session = self.db.create_session()
 
-    def get_occupied_seats(self, projection_id):
-        print
-        self.db.cursor.execute(GET_RESERVATIONS_BY_PROJ_ID, (projection_id,))
-        raw_occupied = self.db.cursor.fetchall()
+        try:
+            raw_reservation = session.query(Reservation).filter(Reservation.id == id).one()
+        except Exception:
+            session.close()
+            return False
 
-        self.db.connection.commit()
+        raw_dict = raw_reservation.__dict__
+        del raw_dict['_sa_instance_state']
 
-        return raw_occupied
+        session.close()
+        return raw_dict
 
-    def get_all_reservations(self):
-        self.db.cursor.execute(SELECT_ALL_RESERVATIONS)
-        raw_reservations = self.db.cursor.fetchall()
+    def get_occupied_seats(self, projection_id):  # DONE?
+        session = self.db.create_session()
+        raw_seats_dict = []
 
-        self.db.connection.commit()
+        try:
+            raw_reservations = session.query(Reservation).filter(Reservation.projection_id == projection_id)
+        except Exception:
+            session.close()
+            return False
 
-        return raw_reservations
+        for raw_reservation in raw_reservations:
+            raw_dict = raw_reservation.__dict__
+            del raw_dict['_sa_instance_state']
+            raw_seats_dict.append(raw_dict)
 
-    def get_my_reservations(self, user_id):
-        self.db.cursor.execute(SELECT_MY_RESERVATIONS, (user_id,))
-        raw_reservations = self.db.cursor.fetchall()
+        session.close()
+        return raw_seats_dict
 
-        self.db.connection.commit()
+    def get_all_reservations(self):  # DONE?
+        session = self.db.create_session()
+        raw_reservations_dict = []
 
-        return raw_reservations
+        try:
+            raw_reservations = session.query(Reservation)
+        except Exception:
+            session.close()
+            return False
+
+        for raw_reservation in raw_reservations:
+            raw_dict = raw_reservation.__dict__
+            del raw_dict['_sa_instance_state']
+            raw_reservations_dict.append(raw_dict)
+
+        session.close()
+        return raw_reservations_dict
+
+    def get_my_reservations(self, user_id):  # DONE
+        session = self.db.create_session()
+        raw_reservations_dict = []
+
+        try:
+            raw_reservations = session.query(Reservation).filter(Reservation.user_id == user_id)
+        except Exception:
+            session.close()
+            return False
+
+        for raw_reservation in raw_reservations:
+            raw_dict = raw_reservation.__dict__
+            del raw_dict['_sa_instance_state']
+            raw_reservations_dict.append(raw_dict)
+
+        session.close()
+        return raw_reservations_dict
