@@ -1,5 +1,5 @@
 from cinema_root.db import Database
-from cinema_root.db_schema import *
+from cinema_root.db_schema.init_db import init_db
 from cinema_root.index_view import welcome
 
 import sys
@@ -8,7 +8,7 @@ import sys
 class Application:
     @classmethod
     def build(self):
-        db = Database()
+        # db = Database()
         # db.cursor.execute(CREATE_USERS)
         # db.cursor.execute(CREATE_MOVIES)
         # db.cursor.execute(CREATE_PROJECTIONS)
@@ -18,9 +18,9 @@ class Application:
         # db.cursor.execute(INIT_MOVIES)
         # db.cursor.execute(INIT_PROJECTIONS)
 
-        db.connection.commit()
-        db.connection.close()
-
+        # db.connection.commit()
+        # db.connection.close()
+        init_db()
         print('Done.')
 
     @classmethod
