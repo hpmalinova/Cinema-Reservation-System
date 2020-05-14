@@ -6,7 +6,7 @@ from .projection_queries import (SELECT_ALL_PROJECTIONS, CREATE_PROJECTION, GET_
 
 class ProjectionGateway:
     def __init__(self):
-        self.db = Database()
+        self.db = Database
 
     def get_all_projections(self):
         self.db.cursor.execute(SELECT_ALL_PROJECTIONS)
