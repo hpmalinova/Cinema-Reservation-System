@@ -67,18 +67,9 @@ class Database:
     engine = create_engine(f"sqlite:///{DB_NAME}")
     Session = sessionmaker(bind=engine)
 
-    # def __init__(self):
-    #     self.session = None
-
     @staticmethod
-    def create_session(self):
+    def create_session():
         return Database.Session()
-
-    # def commit_session(self):
-    #     self.session.commit()
-
-    # def close_session(self):
-    #     self.session.close()
 
     @staticmethod
     def create_tables():

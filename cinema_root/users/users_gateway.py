@@ -1,62 +1,91 @@
-from cinema_root.db import Database
-from .user_queries import (SELECT_ALL_USERS, CREATE_USER, GET_USER_BY_ID, GET_USER_BY_EMAIL,
-                           GET_CLIENT_BY_ID, MAKE_ADMIN_BY_ID, DELETE_USER_BY_ID)
+from cinema_root.db import Database, User
 
 
 class UserGateway:
     def __init__(self):
-        self.db = Database()
+        self.db = Database
 
-    def add_user(self, *, email, hashed_password):
-        # Create User in DB
-        self.db.cursor.execute(CREATE_USER, (email, hashed_password, 'Client'))
+    def add_user(self, *, email, hashed_password):  # DONE
+        session = self.db.create_session()
 
-        # Get User ID from DB
-        self.db.cursor.execute(GET_USER_BY_EMAIL, (email,))
-        raw_user = self.db.cursor.fetchone()
-        self.db.connection.commit()
+        session.add_all([
+            User(email=email, password=hashed_password, user_type="Client")
+        ])
+        session.commit()
 
-        return raw_user
+        raw_user = session.query(User).filter(User.email == email).one()
 
-    def login(self, *, email, hashed_password):
-        # Get User from DB
-        self.db.cursor.execute(GET_USER_BY_EMAIL, (email,))
-        raw_user = self.db.cursor.fetchone()
-        self.db.connection.commit()
+        raw_dict = raw_user.__dict__
+        del raw_dict['_sa_instance_state']
 
-        if raw_user:
-            if hashed_password == raw_user[2]:
-                return raw_user
-            else:
-                raise ValueError('Wrong password')
+        session.close()
+        return raw_dict
+
+    def login(self, *, email, hashed_password):  # DONE
+        session = self.db.create_session()
+
+        try:
+            raw_user = session.query(User).filter(User.email == email).one()
+        except Exception:
+            session.close()
+            return False
+
+        if hashed_password == raw_user.__dict__['password']:
+            raw_dict = raw_user.__dict__
+            del raw_dict['_sa_instance_state']
+            session.close()
+            return raw_dict
         else:
-            raise ValueError('User not found.')
+            session.close()
+            return False
 
-    def get_user(self, *, id):
-        self.db.cursor.execute(GET_USER_BY_ID, (id,))
-        raw_user = self.db.cursor.fetchone()
-        self.db.connection.commit()
+    def get_user(self, *, id):  # DONE
+        session = self.db.create_session()
 
-        return raw_user
+        try:
+            raw_user = session.query(User).filter(User.id == id).one()
+        except Exception:
+            session.close()
+            return False
 
-    def get_all_users(self):
-        self.db.cursor.execute(SELECT_ALL_USERS)
-        raw_users = self.db.cursor.fetchall()
+        raw_dict = raw_user.__dict__
+        del raw_dict['_sa_instance_state']
 
-        self.db.connection.commit()
+        session.close()
+        return raw_dict
 
-        return raw_users
+    def get_all_users(self):  # DONE
+        session = self.db.create_session()
+        raw_users_dict = []
 
-    def promote_user(self, *, id, user_type):
-        self.db.cursor.execute(GET_CLIENT_BY_ID, (id,))
-        raw_user = self.db.cursor.fetchone()
+        try:
+            raw_users = session.query(User)
+        except Exception:
+            session.close()
+            return False
 
-        if raw_user:
-            self.db.cursor.execute(MAKE_ADMIN_BY_ID, (user_type, id))
-            self.db.connection.commit()
-        else:
-            raise ValueError('User was not found.')
+        for raw_user in raw_users:
+            raw_dict = raw_user.__dict__
+            del raw_dict['_sa_instance_state']
+            raw_users_dict.append(raw_dict)
 
-    def delete_user(self, *, id):
-        self.db.cursor.execute(DELETE_USER_BY_ID, (id,))
-        self.db.connection.commit()
+        session.close()
+        return raw_users_dict
+
+    def promote_user(self, *, id, user_type):  # DONE
+        session = self.db.create_session()
+
+        try:
+            session.query(User).filter(User.id == id).update({'user_type': f'{user_type}'})
+        except Exception:
+            session.close()
+            return False
+
+        session.commit()
+        session.close()
+
+    def delete_user(self, *, id):  # DONE - (Works, but prints error?)
+        session = self.db.create_session()
+        session.query(User).filter(User.id == id).delete()
+        session.commit()
+        session.close()
