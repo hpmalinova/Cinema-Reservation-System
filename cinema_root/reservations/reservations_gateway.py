@@ -1,7 +1,4 @@
 from cinema_root.db import Database, Reservation
-from .reservation_queries import (SELECT_ALL_RESERVATIONS, CREATE_QUERY, GET_RESERVATION_BY_PROJ_ID_ROW_COL,
-                                  GET_RESERVATION_BY_USER_ID_PROJ_ID_ROW_COL, GET_RESERVATION_BY_ID,
-                                  GET_RESERVATIONS_BY_PROJ_ID, DELETE_RESERVATION_BY_ID_USER_ID, SELECT_MY_RESERVATIONS)
 
 
 class ReservationGateway:
