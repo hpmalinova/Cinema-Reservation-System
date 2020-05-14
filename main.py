@@ -9,14 +9,14 @@ class Application:
     @classmethod
     def build(self):
         db = Database()
-        db.cursor.execute(CREATE_USERS)
-        db.cursor.execute(CREATE_MOVIES)
-        db.cursor.execute(CREATE_PROJECTIONS)
-        db.cursor.execute(CREATE_RESERVATIONS)
+        # db.cursor.execute(CREATE_USERS)
+        # db.cursor.execute(CREATE_MOVIES)
+        # db.cursor.execute(CREATE_PROJECTIONS)
+        # db.cursor.execute(CREATE_RESERVATIONS)
 
-        db.cursor.execute(INIT_USERS)
-        db.cursor.execute(INIT_MOVIES)
-        db.cursor.execute(INIT_PROJECTIONS)
+        # db.cursor.execute(INIT_USERS)
+        # db.cursor.execute(INIT_MOVIES)
+        # db.cursor.execute(INIT_PROJECTIONS)
 
         db.connection.commit()
         db.connection.close()
