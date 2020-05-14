@@ -1,11 +1,8 @@
-from ..db import User, Movie, Projection
-from ..settings import DB_NAME
-from sqlalchemy import create_engine
+'''from cinema_root.db import User, Movie, Projection
 from sqlalchemy.orm import sessionmaker
 
 
-def init_db():
-    engine = create_engine(f"sqlite:///{DB_NAME}")
+def init_db(engine):
     Session = sessionmaker(bind=engine)
     session = Session()
 
@@ -80,4 +77,4 @@ def init_db():
             p_time="20:30"
         )
     ])
-    session.commit()
+    session.commit()'''
