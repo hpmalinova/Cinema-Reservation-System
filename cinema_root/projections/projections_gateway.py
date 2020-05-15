@@ -1,7 +1,4 @@
 from cinema_root.db import Database, Projection
-from .projection_queries import (SELECT_ALL_PROJECTIONS, CREATE_PROJECTION, GET_PROJECTION_ID, DELETE_PROJECTION_BY_ID,
-                                 GET_PROJECTION_BY_ID, UPDATE_PROJECTION_TYPE, UPDATE_PROJECTION_DATE,
-                                 UPDATE_PROJECTION_TIME, GET_PROJECTION_BY_MOVIE_ID, GET_PROJECTION_BY_PID)
 
 
 class ProjectionGateway:
@@ -26,16 +23,25 @@ class ProjectionGateway:
         session.close()
         return raw_projections_dict
 
-    def add_projection(self, movie_id, p_type, p_date, p_time):
-        # Create Projection in DB
-        self.db.cursor.execute(CREATE_PROJECTION, (movie_id, p_type, p_date, p_time))
+    def add_projection(self, movie_id, p_type, p_date, p_time):  # DONE?
+        session = self.db.create_session()
 
-        # Get Projection ID from DB
-        self.db.cursor.execute(GET_PROJECTION_ID, (movie_id, p_type, p_date, p_time))
-        p_id = self.db.cursor.fetchone()[0]
-        self.db.connection.commit()
+        session.add_all([
+            Projection(movie_id=movie_id, p_type=p_type, p_date=p_date, p_time=p_time)
+        ])
+        session.commit()
 
-        print(f'Successfully created projection with id={p_id}')
+        raw_projection = session.query(Projection).filter(Projection.movie_id == movie_id)\
+                                                  .filter(Projection.p_type == p_type)\
+                                                  .filter(Projection.p_date == p_date)\
+                                                  .filter(Projection.p_time == p_time)\
+                                                  .one()
+
+        raw_dict = raw_projection.__dict__
+        del raw_dict['_sa_instance_state']
+
+        session.close()
+        return raw_dict
 
     def delete_projection(self, p_id):  # DONE?
         session = self.db.create_session()
@@ -68,22 +74,17 @@ class ProjectionGateway:
         session.close()
         return raw_dict["p_id"]
 
-    def update_projection(self, p_id, to_upd, new_value):
-        # projection_id = self.get_projection_id(p_id)
+    def update_projection(self, p_id, to_upd, new_value):  # DONE?
+        session = self.db.create_session()
 
-        if to_upd == 'type':
-            self.db.cursor.execute(UPDATE_PROJECTION_TYPE, (new_value, p_id))
-        if to_upd == 'date':
-            self.db.cursor.execute(UPDATE_PROJECTION_DATE, (new_value, p_id))
-        if to_upd == 'time':
-            self.db.cursor.execute(UPDATE_PROJECTION_TIME, (new_value, p_id))
+        try:
+            session.query(Projection).filter(Projection.p_id == p_id).update({f'{to_upd}': f'{new_value}'})
+        except Exception:
+            session.close()
+            return False
 
-        self.db.connection.commit()
-
-        # if not projection_id:
-        #     raise ValueError('You can`t update non existing projection.')
-
-        # print(f'Projection with id: {p_id} was successfully updated.')
+        session.commit()
+        session.close()
 
     def get_projections_by_movie_id(self, movie_id):  # DONE
         session = self.db.create_session()
