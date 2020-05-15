@@ -8,15 +8,6 @@ class ReservationGateway:
     def add_reservation(self, user_id, projection_id, row, col):  # DONE?
         session = self.db.create_session()
 
-        try:
-            session.query(Reservation).filter(Reservation.projection_id == projection_id)\
-                                      .filter(Reservation.row == row)\
-                                      .filter(Reservation.col == col)\
-                                      .one()
-        except Exception:
-            session.close()
-            return False
-
         session.add_all([
             Reservation(user_id=user_id, projection_id=projection_id, row=row, col=col)
         ])
