@@ -29,20 +29,21 @@ class UserModel:
         cls.validate(email, password)
         password = cls.hash_password(password)
         raw_user = cls.gateway.add_user(email=email, hashed_password=password)
-        if raw_user is not None:  # TODO nz dali traa ima proverka
+        if raw_user:
             return cls(**raw_user)
-        else:
-            return False
 
     @classmethod
     def login(cls, *, email, password):
         password = cls.hash_password(password)
         raw_user = cls.gateway.login(email=email, hashed_password=password)
+        if raw_user:
+            return cls(**raw_user)
 
+    @classmethod
+    def get_user(cls, *, user_id):
+        raw_user = cls.gateway.get_user(user_id=user_id)
         if raw_user is not None:
             return cls(**raw_user)
-        else:
-            return False
 
     @classmethod
     def get_all_users(cls):
@@ -54,12 +55,6 @@ class UserModel:
             all_users.append(user_model)
 
         return all_users
-
-    @classmethod
-    def get_user(cls, *, user_id):
-        raw_user = cls.gateway.get_user(user_id=user_id)
-        if raw_user is not None:
-            return cls(**raw_user)
 
     @classmethod
     def promote_user(cls, *, user_id, user_type):

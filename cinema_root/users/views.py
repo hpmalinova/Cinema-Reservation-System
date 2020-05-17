@@ -15,15 +15,13 @@ class UserViews:
 
     def login(self):
         for i in range(3):
-            print(HACKCINEMA)
-            email = get_input('[Email]: ')
-            print()
-            password = getpass.getpass(prompt='[Password]: ')
+            email, password = self._get_email_and_password()
 
             user = self.controller.login_user(email=email, password=password)
-            if not user:
+
+            if isinstance(user, str):
                 os.system('clear')
-                print('[Oops, something went wrong.]\n[Try again!]')
+                print(user)
             else:
                 print('\n#  ------------------------Success!--------------------------')
                 time.sleep(1)
@@ -31,46 +29,42 @@ class UserViews:
                     return AdminView(user)
                 elif user.user_type == 'Client':
                     return ClientView(user)
-       
-            # try:
-            #     user = self.controller.login_user(email=email, password=password)
 
-            #     if user:
-            #         print('\n#  ------------------------Success!--------------------------')
-            #         time.sleep(1)
-            #         if user.user_type == 'Admin':
-            #             return AdminView(user)
-            #         elif user.user_type == 'Client':
-            #             return ClientView(user)
-            # except Exception as exc:
-            #     os.system('clear')
-            #     print(str(exc) + '\nTry again!')
         print('You tried to log in 3 times. No more tries!')
 
     def signup(self):
         user = ''
         while not user:
-            print(HACKCINEMA)
-            email = get_input('[Email]: ')
-            print()
-            password = getpass.getpass(prompt='[Password]: ')
-            pw_confirm = getpass.getpass(prompt='[Confirm Password]: ')
+            email, password = self._get_email_and_password_with_confirmation()
+            user = self.controller.add_user(email=email, password=password)
 
-            while pw_confirm != password:
+            if isinstance(user, str):
                 os.system('clear')
-                print(HACKCINEMA)
-                print('[Email]:', email)
-                print("\n[Passwords didn't match. Enter password again!]\n")
-                password = getpass.getpass(prompt='[Password]: ')
-                pw_confirm = getpass.getpass(prompt='[Confirm Password]: ')
-            try:
-                user = self.controller.add_user(email=email, password=password)
+                print(user)
+                user = ''
+            else:
                 print('\n#  ------------------------Success!--------------------------')
                 time.sleep(1)
                 return ClientView(user)
-            except ValueError as exc:
-                os.system('clear')
-                print(str(exc) + '\nTry again!')
-            except AssertionError as exc:
-                os.system('clear')
-                print(str(exc) + '\nTry again!')
+
+    @staticmethod
+    def _get_email_and_password():
+        print(HACKCINEMA)
+        email = get_input('[Email]: ')
+        print()
+        password = getpass.getpass(prompt='[Password]: ')
+        return (email, password)
+
+    def _get_email_and_password_with_confirmation(self):
+        email, password = self._get_email_and_password()
+        pw_confirm = getpass.getpass(prompt='[Confirm Password]: ')
+
+        while pw_confirm != password:
+            os.system('clear')
+            print(HACKCINEMA)
+            print('[Email]:', email)
+            print("\n[Passwords didn't match. Enter password again!]\n")
+            password = getpass.getpass(prompt='[Password]: ')
+            pw_confirm = getpass.getpass(prompt='[Confirm Password]: ')
+
+        return (email, password)

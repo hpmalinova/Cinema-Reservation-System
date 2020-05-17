@@ -27,8 +27,6 @@ class UserGateway:
                 raw_dict = raw_user.__dict__
                 del raw_dict['_sa_instance_state']
                 return raw_dict
-            # else:
-            #     return False
 
     def get_user(self, *, user_id):
         with session_scope() as session:
