@@ -1,4 +1,5 @@
-from cinema_root.db import Database
+from cinema_root.db import create_tables
+from cinema_root.db_schema import init_db
 from cinema_root.index_view import welcome
 import sys
 
@@ -6,8 +7,8 @@ import sys
 class Application:
     @classmethod
     def build(self):
-        Database.create_tables()
-        Database.init_db()
+        create_tables()
+        init_db()
         print('Done.')
 
     @classmethod

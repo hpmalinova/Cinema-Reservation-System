@@ -11,6 +11,55 @@ class ReservationViews:
     def __init__(self):
         self.controller = ReservationController()
 
+    def add_reservation(self, user_id):
+        reservation_info = self._get_reservation_info()
+        num_of_tickets = reservation_info[0]
+        movie_id = reservation_info[1]
+        projection_id = reservation_info[2]
+
+        occupied_places = self.controller.get_occupied_seats(projection_id)
+        occupied_tuples = []
+        for user in occupied_places:
+            occupied_tuples.append((user.row, user.col))
+
+        self._print_movie_theater(occupied_tuples)
+
+        seats = self._reserve_seats(occupied_tuples, num_of_tickets)
+
+        reserved_seats = ''
+        for seat in seats:
+            reserved_seats += f'{seat} '
+
+        confirmed = self._confirmation(movie_id, projection_id, reserved_seats)
+        print(BACKGROUND_LINE)
+        if confirmed:
+            for seat in seats:
+                self.controller.add_reservation(user_id, projection_id, seat[0], seat[1])
+            print('\n#  -----------------------Thank you!-------------------------')
+        else:
+            print('\n#  ---------Reservation [NOT] confirmed. Going back.---------')
+        print(BACKGROUND_LINE)
+
+    def delete_reservation(self, user_id):
+        print(BACKGROUND_LINE)
+        print('[Hello!]')
+        reservation_id = get_input('[Please enter reservation id]: ')
+        if self.controller.delete_reservation(int(user_id), int(reservation_id)):
+            print(f'[Reservation with id={reservation_id} was successfully deleted.]')
+        else:
+            print(f'[Oops, something went wrong.\nReservation with id={reservation_id} was not deleted.]')
+
+    def show_my_reservations(self, user_id):
+        reservations = self.controller.get_my_reservations(user_id)
+        if not reservations:
+            print('You have no reservations.')
+        for reservation in reservations:
+            print(BACKGROUND_LINE)
+            print(f'[Reservation_ID]: {reservation.id}')
+            print(f'[Projection_ID]:  {reservation.projection_id}')
+            print(f'[Row]:            {reservation.row}')
+            print(f'[Col]:            {reservation.col}')
+
     def _get_reservation_info(self):
         print(BACKGROUND_LINE)
         print('[Hello!]')
@@ -86,55 +135,6 @@ class ReservationViews:
         print('#  [Seats]:', reserved_seats)
         confirm = get_input('#  [Confirm - type "finalize"]: ')
         return confirm == 'finalize'
-
-    def add_reservation(self, user_id):
-        reservation_info = self._get_reservation_info()
-        num_of_tickets = reservation_info[0]
-        movie_id = reservation_info[1]
-        projection_id = reservation_info[2]
-
-        occupied_places = self.controller.get_occupied_seats(projection_id)
-        occupied_tuples = []
-        for user in occupied_places:
-            occupied_tuples.append((user.row, user.col))
-
-        self._print_movie_theater(occupied_tuples)
-
-        seats = self._reserve_seats(occupied_tuples, num_of_tickets)
-
-        reserved_seats = ''
-        for seat in seats:
-            reserved_seats += f'{seat} '
-
-        confirmed = self._confirmation(movie_id, projection_id, reserved_seats)
-        print(BACKGROUND_LINE)
-        if confirmed:
-            for seat in seats:
-                self.controller.add_reservation(user_id, projection_id, seat[0], seat[1])
-            print('\n#  -----------------------Thank you!-------------------------')
-        else:
-            print('\n#  ---------Reservation [NOT] confirmed. Going back.---------')
-        print(BACKGROUND_LINE)
-
-    def delete_reservation(self, user_id):
-        print(BACKGROUND_LINE)
-        print('[Hello!]')
-        reservation_id = get_input('[Please enter reservation id]: ')
-        if self.controller.delete_reservation(int(user_id), int(reservation_id)):
-            print(f'[Reservation with id={reservation_id} was successfully deleted.]')
-        else:
-            print(f'[Oops, something went wrong.\nReservation with id={reservation_id} was not deleted.]')
-
-    def show_my_reservations(self, user_id):
-        reservations = self.controller.get_my_reservations(user_id)
-        if not reservations:
-            print('You have no reservations.')
-        for reservation in reservations:
-            print(BACKGROUND_LINE)
-            print(f'[Reservation_ID]: {reservation.id}')
-            print(f'[Projection_ID]:  {reservation.projection_id}')
-            print(f'[Row]:            {reservation.row}')
-            print(f'[Col]:            {reservation.col}')
 
 
 class AdminReservationView(ReservationViews):

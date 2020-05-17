@@ -29,15 +29,20 @@ class UserModel:
         cls.validate(email, password)
         password = cls.hash_password(password)
         raw_user = cls.gateway.add_user(email=email, hashed_password=password)
-
-        return cls(**raw_user)
+        if raw_user is not None:  # TODO nz dali traa ima proverka
+            return cls(**raw_user)
+        else:
+            return False
 
     @classmethod
     def login(cls, *, email, password):
         password = cls.hash_password(password)
         raw_user = cls.gateway.login(email=email, hashed_password=password)
 
-        return cls(**raw_user)
+        if raw_user is not None:
+            return cls(**raw_user)
+        else:
+            return False
 
     @classmethod
     def get_all_users(cls):
