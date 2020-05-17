@@ -5,21 +5,21 @@ from .projections_gateway import ProjectionGateway
 class ProjectionModel:
     gateway = ProjectionGateway()
 
-    def __init__(self, *, p_id, movie_id, p_type, p_date, p_time):
-        self.p_id = p_id
+    def __init__(self, *, projection_id, movie_id, projection_type, projection_date, projection_time):
+        self.projection_id = projection_id
         self.movie_id = movie_id
-        self.p_type = p_type
-        self.p_date = p_date
-        self.p_time = p_time
+        self.projection_type = projection_type
+        self.projection_date = projection_date
+        self.projection_time = projection_time
 
     @classmethod
-    def validate(cls, p_type, p_date, p_time):
-        validate_type(p_type)
-        validate_date_and_time(p_date, p_time)
+    def validate(cls, projection_type, projection_date, projection_time):
+        validate_type(projection_type)
+        validate_date_and_time(projection_date, projection_time)
 
     @classmethod
-    def get_projection_by_id(cls, p_id):
-        projection = cls.gateway.get_projection_by_id(p_id)
+    def get_projection_by_id(cls, projection_id):
+        projection = cls.gateway.get_projection_by_id(projection_id)
         if projection is not None:
             return cls(**projection)
 
@@ -35,18 +35,18 @@ class ProjectionModel:
         return all_projections
 
     @classmethod
-    def add_projection(cls, movie_id, p_type, p_date, p_time):
+    def add_projection(cls, movie_id, projection_type, projection_date, projection_time):
         movie_id = int(movie_id)
-        cls.validate(p_type, p_date, p_time)
-        cls.gateway.add_projection(movie_id, p_type, p_date, p_time)
+        cls.validate(projection_type, projection_date, projection_time)
+        cls.gateway.add_projection(movie_id, projection_type, projection_date, projection_time)
 
     @classmethod
-    def delete_projection(cls, p_id):
-        cls.gateway.delete_projection(p_id)
+    def delete_projection(cls, projection_id):
+        cls.gateway.delete_projection(projection_id)
 
     @classmethod
-    def update_projection(cls, p_id, to_upd, new_value):
-        cls.gateway.update_projection(p_id, to_upd, new_value)
+    def update_projection(cls, projection_id, to_upd, new_value):
+        cls.gateway.update_projection(projection_id, to_upd, new_value)
 
     @classmethod
     def get_projections_by_movie_id(cls, movie_id):

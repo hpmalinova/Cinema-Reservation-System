@@ -8,27 +8,33 @@ class UserGateway:
             user = User(email=email, password=hashed_password, user_type="Client")
             session.add(user)
 
-            raw_user = session.query(User).filter(User.email == email).one()
+            raw_user = session.query(User)\
+                              .filter(User.email == email)\
+                              .one()
 
             raw_dict = raw_user.__dict__
             del raw_dict['_sa_instance_state']
 
             return raw_dict
 
-    def login(self, *, email, hashed_password):  # DONE
+    def login(self, *, email, hashed_password):
         with session_scope() as session:
-            raw_user = session.query(User).filter(User.email == email).one()
+            raw_user = session.query(User)\
+                              .filter(User.email == email)\
+                              .one()
 
             if hashed_password == raw_user.__dict__['password']:
                 raw_dict = raw_user.__dict__
                 del raw_dict['_sa_instance_state']
                 return raw_dict
-            else:
-                return False
+            # else:
+            #     return False
 
-    def get_user(self, *, id):
+    def get_user(self, *, user_id):
         with session_scope() as session:
-            raw_user = session.query(User).filter(User.id == id).one()
+            raw_user = session.query(User)\
+                              .filter(User.user_id == user_id)\
+                              .one()
 
             raw_dict = raw_user.__dict__
             del raw_dict['_sa_instance_state']
@@ -47,10 +53,14 @@ class UserGateway:
 
             return raw_users_dict
 
-    def promote_user(self, *, id, user_type):
+    def promote_user(self, *, user_id, user_type):
         with session_scope() as session:
-            session.query(User).filter(User.id == id).update({'user_type': f'{user_type}'})
+            session.query(User)\
+                   .filter(User.user_id == user_id)\
+                   .update({'user_type': f'{user_type}'})
 
-    def delete_user(self, *, id):  # DONE - (Works, but prints error?)
+    def delete_user(self, *, user_id):
         with session_scope() as session:
-            session.query(User).filter(User.id == id).delete()
+            session.query(User)\
+                   .filter(User.user_id == user_id)\
+                   .delete()

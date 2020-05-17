@@ -1,6 +1,7 @@
 from .controllers import UserController
 from cinema_root.movies.movie_views import AdminMovieView
 from cinema_root.projections.projection_views import AdminProjectionView
+from cinema_root.reservations.reservation_views import AdminReservationView
 from cinema_root.utils import get_input, show_help_exists, BACKGROUND_LINE
 
 import os
@@ -40,11 +41,16 @@ class AdminView:
         all_commands = {
             'view_profile': self.view_profile, 'help': self.show_commands,
             'get_all_users': self.get_all_users, 'delete_user': self.delete_user,
-            'promote_user': self.promote_user, 'get_user': self.get_user, 'show_all_movies': self.show_all_movies,
+            'promote_user': self.promote_user, 'get_user': self.get_user,
+
+            'show_all_movies': self.show_all_movies,
             'add_movie': self.add_movie, 'delete_movie': self.delete_movie,
+
             'add_projection': self.add_projection, 'delete_projection': self.delete_projection,
             'show_projections': self.show_projections, 'update_projection': self.update_projection,
-            'show_projections_by_movie_id': self.show_projections_by_movie_id
+            'show_projections_by_movie_id': self.show_projections_by_movie_id,
+
+            'show_reservations': self.show_reservations
         }
         command_split = command.split()
 
@@ -55,7 +61,7 @@ class AdminView:
 
     def view_profile(self, *args):
         print(BACKGROUND_LINE)
-        print('[User ID]: ', self.user.id)
+        print('[User ID]: ', self.user.user_id)
         print('[Email]:   ', self.user.email)
         print('[Type]:    ', self.user.user_type)
         print(BACKGROUND_LINE)
@@ -65,11 +71,11 @@ class AdminView:
         assert int(args[0][0])
 
         user_id = int(args[0][0])
-        user = self.controller.get_user(id=user_id)
+        user = self.controller.get_user(user_id=user_id)
 
         if user:
             print(BACKGROUND_LINE)
-            print('[User ID]: ', user.id, '[Email]: ', user.email, '[Type]: ', user.user_type)
+            print('[User ID]: ', user.user_id, '[Email]: ', user.email, '[Type]: ', user.user_type)
             print(BACKGROUND_LINE)
         else:
             print(f'There is no user with id={user_id}.')
@@ -80,7 +86,7 @@ class AdminView:
         user_models = self.controller.get_all_users()
         print(BACKGROUND_LINE)
         for user in user_models:
-            print('[User ID]: ', user.id, '[Email]: ', user.email, '[Type]: ', user.user_type)
+            print('[User ID]: ', user.user_id, '[Email]: ', user.email, '[Type]: ', user.user_type)
         print(BACKGROUND_LINE)
 
     def promote_user(self, *args):
@@ -89,7 +95,7 @@ class AdminView:
         assert args[0][1] == 'Admin', Exception('You can only promote Clients to Admins')
         assert int(args[0][0])
 
-        self.controller.promote_user(id=int(args[0][0]), user_type=args[0][1])
+        self.controller.promote_user(user_id=int(args[0][0]), user_type=args[0][1])
 
         print(f'User with id = {args[0][0]} is now an Admin!\nCongrats!')
 
@@ -97,7 +103,7 @@ class AdminView:
         assert args[0] != [], Exception('delete_user takes one argument - <id>')
         assert int(args[0][0])
 
-        if self.controller.delete_user(id=int(args[0][0])):
+        if self.controller.delete_user(user_id=int(args[0][0])):
             print(f'[User with id = [{args[0][0]}] deleted successfully!]')
         else:
             print(f'[Oops, something happend. User with id = [{args[0][0]}] was not deleted!]')
@@ -148,3 +154,6 @@ class AdminView:
 
     def show_projections_by_movie_id(self, *args):
         AdminProjectionView().show_projections_by_movie_id()
+
+    def show_reservations(self, *args):
+        AdminReservationView().show_all_reservations()

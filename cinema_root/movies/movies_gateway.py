@@ -3,18 +3,18 @@ from cinema_root.db import session_scope
 
 
 class MovieGateway:
-    def add_movie(self, title, year, rating):
+    def add_movie(self, title, movie_year, rating):
         with session_scope() as session:
-            movie = Movie(title=title, year=year, rating=rating)
+            movie = Movie(title=title, movie_year=movie_year, rating=rating)
             session.add(movie)
 
-    def delete_movie(self, id):
+    def delete_movie(self, movie_id):
         with session_scope() as session:
-            session.query(Movie).filter(Movie.id == id).delete()
+            session.query(Movie).filter(Movie.movie_id == movie_id).delete()
 
-    def get_movie(self, id):
+    def get_movie(self, movie_id):
         with session_scope() as session:
-            raw_movie = session.query(Movie).filter(Movie.id == id).one()
+            raw_movie = session.query(Movie).filter(Movie.movie_id == movie_id).one()
 
             raw_dict = raw_movie.__dict__
             del raw_dict['_sa_instance_state']
@@ -33,9 +33,9 @@ class MovieGateway:
 
             return raw_movies_dict
 
-    def get_movie_title(self, id):
+    def get_movie_title(self, movie_id):
         with session_scope() as session:
-            raw_movie = session.query(Movie).filter(Movie.id == id).one()
+            raw_movie = session.query(Movie).filter(Movie.movie_id == movie_id).one()
 
             raw_dict = raw_movie.__dict__
             del raw_dict['_sa_instance_state']

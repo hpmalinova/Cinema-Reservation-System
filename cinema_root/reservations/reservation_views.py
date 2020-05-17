@@ -55,12 +55,13 @@ class ReservationViews:
             print('You have no reservations.')
         for reservation in reservations:
             print(BACKGROUND_LINE)
-            print(f'[Reservation_ID]: {reservation.id}')
+            print(f'[Reservation_ID]: {reservation.reservation_id}')
             print(f'[Projection_ID]:  {reservation.projection_id}')
             print(f'[Row]:            {reservation.row}')
             print(f'[Col]:            {reservation.col}')
 
-    def _get_reservation_info(self):
+    @staticmethod
+    def _get_reservation_info():
         print(BACKGROUND_LINE)
         print('[Hello!]')
         movie_view = MovieViews()
@@ -78,7 +79,8 @@ class ReservationViews:
 
         return (num_of_tickets, movie_id, projection_id)
 
-    def _print_movie_theater(self, occupied_tuples):
+    @staticmethod
+    def _print_movie_theater(occupied_tuples):
         print(BACKGROUND_LINE)
         print('#  [Available seats (marked with a dot)]:')
         print(BACKGROUND_LINE)
@@ -99,7 +101,8 @@ class ReservationViews:
             print(row, current_row)
         print(BACKGROUND_LINE)
 
-    def _reserve_seats(self, occupied_tuples, num_of_tickets):
+    @staticmethod
+    def _reserve_seats(occupied_tuples, num_of_tickets):
         ticket = 0
         seats = []
         while ticket != int(num_of_tickets):
@@ -128,7 +131,9 @@ class ReservationViews:
 
         return seats
 
-    def _confirmation(self, movie_id, projection_id, reserved_seats):
+    # TODO Ima li nujda ot projection_id?
+    @staticmethod
+    def _confirmation(movie_id, projection_id, reserved_seats):
         os.system('clear')
         print(BACKGROUND_LINE)
         print('#  [This is your reservation]:')
@@ -141,12 +146,16 @@ class AdminReservationView(ReservationViews):
     def __init__(self):
         super().__init__()
 
-    def get_all_reservations(self):
+    def show_all_reservations(self):
         reservations = self.controller.get_all_reservations()
-        for reservation in reservations:
+        if not reservations:
             print(BACKGROUND_LINE)
-            print(f'[Reservation_ID]: {reservation.id}')
-            print(f'[User_ID]:        {reservation.user_id}')
-            print(f'[Projection_ID]:  {reservation.projection_id}')
-            print(f'[Row]:            {reservation.row}')
-            print(f'[Col]:            {reservation.col}')
+            print('[There are no reservations at the moment.]')
+        else:
+            for reservation in reservations:
+                print(BACKGROUND_LINE)
+                print(f'[Reservation_ID]: {reservation.reservation_id}')
+                print(f'[User_ID]:        {reservation.user_id}')
+                print(f'[Projection_ID]:  {reservation.projection_id}')
+                print(f'[Row]:            {reservation.row}')
+                print(f'[Col]:            {reservation.col}')

@@ -39,41 +39,41 @@ def init_db():
             ),
             Movie(
                 title="Jojo Rabbit",
-                year=2019,
+                movie_year=2019,
                 rating=7.9
             ),
             Movie(
                 title="Black Widow",
-                year=2020,
+                movie_year=2020,
                 rating=0.0
             ),
             Movie(
                 title="Harley Quinn: Birds of Prey",
-                year=2020,
+                movie_year=2020,
                 rating=6.2
             ),
             Projection(
                 movie_id=1,
-                p_type="3D",
-                p_date="2020-05-15",
-                p_time="19:10"
+                projection_type="3D",
+                projection_date="2020-05-15",
+                projection_time="19:10"
             ),
             Projection(
                 movie_id=1,
-                p_type="4DX",
-                p_date="2020-05-15",
-                p_time="21:00"
+                projection_type="4DX",
+                projection_date="2020-05-15",
+                projection_time="21:00"
             ),
             Projection(
                 movie_id=2,
-                p_type="4DX",
-                p_date="2020-06-15",
-                p_time="18:00"
+                projection_type="4DX",
+                projection_date="2020-06-15",
+                projection_time="18:00"
             ),
             Projection(
                 movie_id=1,
-                p_type="3D",
-                p_date="2020-06-15",
-                p_time="20:30"
+                projection_type="3D",
+                projection_date="2020-06-15",
+                projection_time="20:30"
             )
         ])

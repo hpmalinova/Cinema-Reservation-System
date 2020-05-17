@@ -6,13 +6,13 @@ from sqlalchemy import (Column, Integer, String, REAL,
 
 class Movie(Base):
     __tablename__ = "movies"
-    id = Column(Integer, primary_key=True)
+    movie_id = Column(Integer, primary_key=True)
     title = Column(String(30), nullable=False)
-    year = Column(Integer, CheckConstraint('year BETWEEN 2019 and 2022'), nullable=False)
+    movie_year = Column(Integer, CheckConstraint('movie_year BETWEEN 2019 and 2022'), nullable=False)
     rating = Column(REAL, CheckConstraint('rating BETWEEN 0 and 10'))
     children = relationship("Projection", passive_deletes=True)  # Important!
     __table_args__ = (
-        UniqueConstraint(title, year),
+        UniqueConstraint(title, movie_year),
     )
 
 # CREATE_MOVIES = '''

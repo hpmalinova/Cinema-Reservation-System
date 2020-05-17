@@ -5,8 +5,8 @@ from .reservations_gateway import ReservationGateway
 class ReservationModel:
     gateway = ReservationGateway()
 
-    def __init__(self, *, id, user_id, projection_id, row, col):
-        self.id = id
+    def __init__(self, *, reservation_id, user_id, projection_id, row, col):
+        self.reservation_id = reservation_id
         self.user_id = user_id
         self.projection_id = projection_id
         self.row = row
@@ -53,8 +53,8 @@ class ReservationModel:
         cls.gateway.delete_reservation(user_id, reservation_id)
 
     @classmethod
-    def find_reservation(cls, id):
-        reservation = cls.gateway.find_reservation(id)
+    def find_reservation(cls, reservation_id):
+        reservation = cls.gateway.find_reservation(reservation_id)
         if reservation is not None:
             return cls(**reservation)
 

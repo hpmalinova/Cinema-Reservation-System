@@ -6,7 +6,7 @@ from sqlalchemy import (Column, Integer, String,
 
 class User(Base):
     __tablename__ = "users"
-    id = Column(Integer, primary_key=True, nullable=False)
+    user_id = Column(Integer, primary_key=True, nullable=False)
     email = Column(String(50), unique=True, nullable=False)
     password = Column(String(50), nullable=False)
     user_type = Column(String(10), CheckConstraint('user_type = "Admin" or user_type = "Client"'), nullable=False)

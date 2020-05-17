@@ -1,5 +1,4 @@
 from cinema_root.db import Base
-# from sqlalchemy.orm import relationship
 from sqlalchemy import (Column, Integer,
                         CheckConstraint,
                         ForeignKeyConstraint)
@@ -7,14 +6,14 @@ from sqlalchemy import (Column, Integer,
 
 class Reservation(Base):
     __tablename__ = "reservations"
-    id = Column(Integer, primary_key=True)
+    reservation_id = Column(Integer, primary_key=True)
     user_id = Column(Integer, nullable=False)
     projection_id = Column(Integer, nullable=False)
     row = Column(Integer, CheckConstraint('row BETWEEN 1 and 10'), nullable=False)
     col = Column(Integer, CheckConstraint('col BETWEEN 1 and 10'), nullable=False)
     __table_args__ = (
-        ForeignKeyConstraint(["user_id"], ["users.id"], ondelete="CASCADE"),
-        ForeignKeyConstraint(["projection_id"], ["projections.p_id"], ondelete="CASCADE"),
+        ForeignKeyConstraint(["user_id"], ["users.user_id"], ondelete="CASCADE"),
+        ForeignKeyConstraint(["projection_id"], ["projections.projection_id"], ondelete="CASCADE"),
     )
 
 # CREATE_RESERVATIONS = '''

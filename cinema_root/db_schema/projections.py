@@ -1,19 +1,18 @@
 from cinema_root.db import Base
-# from sqlalchemy.orm import relationship
 from sqlalchemy import (Column, Integer, String,
                         UniqueConstraint, ForeignKeyConstraint)
 
 
 class Projection(Base):
     __tablename__ = "projections"
-    p_id = Column(Integer, primary_key=True)
+    projection_id = Column(Integer, primary_key=True)
     movie_id = Column(Integer, nullable=False)
-    p_type = Column(String(3), nullable=False)
-    p_date = Column(String(10), nullable=False)
-    p_time = Column(String(5), nullable=False)
+    projection_type = Column(String(3), nullable=False)
+    projection_date = Column(String(10), nullable=False)
+    projection_time = Column(String(5), nullable=False)
     __table_args__ = (
-        UniqueConstraint(p_date, p_time),
-        ForeignKeyConstraint(["movie_id"], ["movies.id"], ondelete="CASCADE")
+        UniqueConstraint(projection_date, projection_time),
+        ForeignKeyConstraint(["movie_id"], ["movies.movie_id"], ondelete="CASCADE")
     )
 
 

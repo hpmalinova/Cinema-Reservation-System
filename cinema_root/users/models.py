@@ -7,8 +7,8 @@ import hashlib
 class UserModel:
     gateway = UserGateway()
 
-    def __init__(self, *, id, email, password, user_type):
-        self.id = id
+    def __init__(self, *, user_id, email, password, user_type):
+        self.user_id = user_id
         self.email = email
         self.password = password
         self.user_type = user_type
@@ -56,15 +56,15 @@ class UserModel:
         return all_users
 
     @classmethod
-    def get_user(cls, *, id):
-        raw_user = cls.gateway.get_user(id=id)
+    def get_user(cls, *, user_id):
+        raw_user = cls.gateway.get_user(user_id=user_id)
         if raw_user is not None:
             return cls(**raw_user)
 
     @classmethod
-    def promote_user(cls, *, id, user_type):
-        cls.gateway.promote_user(id=id, user_type=user_type)
+    def promote_user(cls, *, user_id, user_type):
+        cls.gateway.promote_user(user_id=user_id, user_type=user_type)
 
     @classmethod
-    def delete_user(cls, *, id):
-        cls.gateway.delete_user(id=id)
+    def delete_user(cls, *, user_id):
+        cls.gateway.delete_user(user_id=user_id)

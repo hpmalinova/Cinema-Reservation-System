@@ -6,15 +6,15 @@ class ReservationController:
         self.model = ReservationModel
 
     def log_info(self, *args1):
-        def helper(*kwargs):
+        def write_to_file(*kwargs):
             reservation = kwargs[0].model.add_reservation(kwargs[1], kwargs[2], kwargs[3], kwargs[4])
             with open('log.txt', 'a+') as f:
-                f.write(f'ID: {reservation.id} ')
+                f.write(f'ID: {reservation.reservation_id} ')
                 f.write(f'ProjectionID: {reservation.projection_id} ')
                 f.write(f'UserID: {reservation.user_id} ')
                 f.write(f'Row: {reservation.row} ')
                 f.write(f'Column: {reservation.col}\n')
-        return helper
+        return write_to_file
 
     @log_info
     def add_reservation(self, user_id, projection_id, row, col):

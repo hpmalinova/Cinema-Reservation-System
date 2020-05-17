@@ -35,16 +35,20 @@ class ClientView:
 
         print('Goodbye!')
 
-    # @staticmethod
     def execute_command(self, command):
         all_commands = {
-            'help': self.show_commands, 'view_profile': self.view_profile,
+            'view_profile': self.view_profile,
+
             'show_all_movies': self.show_all_movies,
+
             'show_projections': self.show_projections,
             'show_projections_by_movie_id': self.show_projections_by_movie_id,
+
             'make_reservation': self.make_reservation,
             'show_my_reservations': self.show_my_reservations,
-            'delete_reservation': self.delete_reservation
+            'delete_reservation': self.delete_reservation,
+
+            'help': self.show_commands
         }
 
         command_split = command.split()
@@ -71,7 +75,7 @@ class ClientView:
 
     def view_profile(self, *args):
         print(BACKGROUND_LINE)
-        print('[User ID]: ', self.user.id)
+        print('[User ID]: ', self.user.user_id)
         print('[Email]:   ', self.user.email)
         print('[Type]:    ', self.user.user_type)
         print(BACKGROUND_LINE)
@@ -83,17 +87,17 @@ class ClientView:
         ProjectionView().show_all_projections()
 
     def show_projections_by_movie_id(self, *args):
-        assert args[0] != [], Exception('get_user takes one argument - <id>')
+        assert args[0] != [], Exception('show_projections_by_movie_id takes one argument - <id>')
         assert int(args[0][0])
         ProjectionView().show_projections_by_movie_id(int(args[0][0]))
 
     def show_my_reservations(self, *args):
-        ReservationViews().show_my_reservations(self.user.id)
+        ReservationViews().show_my_reservations(self.user.user_id)
 
     def make_reservation(self, *args):
         assert args[0] == [], Exception('make_reservation does not take any arguments')
-        ReservationViews().add_reservation(self.user.id)
+        ReservationViews().add_reservation(self.user.user_id)
 
     def delete_reservation(self, *args):
         assert args[0] == [], Exception('delete_reservation does not take any arguments')
-        ReservationViews().delete_reservation(self.user.id)
+        ReservationViews().delete_reservation(self.user.user_id)

@@ -1,8 +1,9 @@
-from .controllers import UserController
-from .admin_view import AdminView
 from .client_view import ClientView
-from cinema_root.utils import get_input
-from ..utils import HACKCINEMA
+from .admin_view import AdminView
+from .controllers import UserController
+
+from cinema_root.utils import get_input, HACKCINEMA
+
 import getpass
 import time
 import os
@@ -19,19 +20,31 @@ class UserViews:
             print()
             password = getpass.getpass(prompt='[Password]: ')
 
-            try:
-                user = self.controller.login_user(email=email, password=password)
-
-                if user:
-                    print('\n#  ------------------------Success!--------------------------')
-                    time.sleep(1)
-                    if user.user_type == 'Admin':
-                        return AdminView(user)
-                    elif user.user_type == 'Client':
-                        return ClientView(user)
-            except Exception as exc:
+            user = self.controller.login_user(email=email, password=password)
+            if not user:
                 os.system('clear')
-                print(str(exc) + '\nTry again!')
+                print('[Oops, something went wrong.]\n[Try again!]')
+            else:
+                print('\n#  ------------------------Success!--------------------------')
+                time.sleep(1)
+                if user.user_type == 'Admin':
+                    return AdminView(user)
+                elif user.user_type == 'Client':
+                    return ClientView(user)
+       
+            # try:
+            #     user = self.controller.login_user(email=email, password=password)
+
+            #     if user:
+            #         print('\n#  ------------------------Success!--------------------------')
+            #         time.sleep(1)
+            #         if user.user_type == 'Admin':
+            #             return AdminView(user)
+            #         elif user.user_type == 'Client':
+            #             return ClientView(user)
+            # except Exception as exc:
+            #     os.system('clear')
+            #     print(str(exc) + '\nTry again!')
         print('You tried to log in 3 times. No more tries!')
 
     def signup(self):

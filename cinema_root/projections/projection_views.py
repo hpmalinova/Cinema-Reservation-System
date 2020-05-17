@@ -1,7 +1,6 @@
 from .controllers import ProjectionController
 from .validation import ALL_UPDATES
-from cinema_root.utils import get_input
-from ..utils import BACKGROUND_LINE
+from cinema_root.utils import get_input, BACKGROUND_LINE
 
 
 class ProjectionView:
@@ -12,25 +11,25 @@ class ProjectionView:
         projections = self.controller.get_all_projections()
         for projection in projections:
             print(BACKGROUND_LINE)
-            print(f'ID:       {projection.p_id}')
+            print(f'ID:       {projection.projection_id}')
             print(f'Movie_ID: {projection.movie_id}')
-            print(f'Type:     {projection.p_type}')
-            print(f'Date:     {projection.p_date}')
-            print(f'Time:     {projection.p_time}')
+            print(f'Type:     {projection.projection_type}')
+            print(f'Date:     {projection.projection_date}')
+            print(f'Time:     {projection.projection_time}')
 
     def show_projections_by_movie_id(self, movie_id):
         projections = self.controller.get_projections_by_movie_id(movie_id)
 
         if not projections:
             print(f'[No projections for movie with id = [{movie_id}]]')
-            return
-        for projection in projections:
-            print(BACKGROUND_LINE)
-            print(f'ID:       {projection.p_id}')
-            print(f'Movie_ID: {projection.movie_id}')
-            print(f'Type:     {projection.p_type}')
-            print(f'Date:     {projection.p_date}')
-            print(f'Time:     {projection.p_time}')
+        else:
+            for projection in projections:
+                print(BACKGROUND_LINE)
+                print(f'ID:       {projection.projection_id}')
+                print(f'Movie_ID: {projection.movie_id}')
+                print(f'Type:     {projection.projection_type}')
+                print(f'Date:     {projection.projection_date}')
+                print(f'Time:     {projection.projection_time}')
 
 
 class AdminProjectionView(ProjectionView):
@@ -40,11 +39,11 @@ class AdminProjectionView(ProjectionView):
     def add_projection(self):
         print(BACKGROUND_LINE)
         movie_id = get_input('[Enter movie_id]: ')
-        p_type = get_input('[Enter projection type]: ')
-        p_date = get_input('[Enter projection date /YYYY-MM-DD/]: ')
-        p_time = get_input('[Enter projection time /HH-MM/]: ')
+        projection_type = get_input('[Enter projection type]: ')
+        projection_date = get_input('[Enter projection date /YYYY-MM-DD/]: ')
+        projection_time = get_input('[Enter projection time /HH-MM/]: ')
 
-        self.controller.add_projection(movie_id, p_type, p_date, p_time)
+        self.controller.add_projection(movie_id, projection_type, projection_date, projection_time)
 
     def delete_projection(self):
         print(BACKGROUND_LINE)

@@ -5,15 +5,15 @@ from .movies_gateway import MovieGateway
 class MovieModel:
     gateway = MovieGateway()
 
-    def __init__(self, *, id, title, year, rating):
-        self.id = id
+    def __init__(self, *, movie_id, title, movie_year, rating):
+        self.movie_id = movie_id
         self.title = title
-        self.year = year
+        self.movie_year = movie_year
         self.rating = rating
 
     @classmethod
-    def validate(cls, year, rating):
-        validate_year(year)
+    def validate(cls, movie_year, rating):
+        validate_year(movie_year)
         validate_rating(rating)
 
     @classmethod
@@ -28,22 +28,22 @@ class MovieModel:
         return all_movies
 
     @classmethod
-    def get_movie_title(cls, id):
-        return cls.gateway.get_movie_title(id)
+    def get_movie_title(cls, movie_id):
+        return cls.gateway.get_movie_title(movie_id)
 
     @classmethod
-    def add_movie(cls, title, year, rating):
-        year = int(year)
+    def add_movie(cls, title, movie_year, rating):
+        movie_year = int(movie_year)
         rating = float(rating)
-        cls.validate(year, rating)
-        cls.gateway.add_movie(title, year, rating)
+        cls.validate(movie_year, rating)
+        cls.gateway.add_movie(title, movie_year, rating)
 
     @classmethod
-    def delete_movie(cls, id):
-        cls.gateway.delete_movie(id)
+    def delete_movie(cls, movie_id):
+        cls.gateway.delete_movie(movie_id)
 
     @classmethod
-    def get_movie(cls, id):
-        movie = cls.gateway.get_movie(id)
+    def get_movie(cls, movie_id):
+        movie = cls.gateway.get_movie(movie_id)
         if movie is not None:
             return cls(**movie)
