@@ -17,6 +17,19 @@ class MovieModel:
         validate_rating(rating)
 
     @classmethod
+    def add_movie(cls, title, movie_year, rating):
+        movie_year = int(movie_year)
+        rating = float(rating)
+        cls.validate(movie_year, rating)
+        cls.gateway.add_movie(title, movie_year, rating)
+
+    @classmethod
+    def get_movie(cls, movie_id):
+        movie = cls.gateway.get_movie(movie_id)
+        if movie:
+            return cls(**movie)
+
+    @classmethod
     def get_all_movies(cls):
         raw_movies = cls.gateway.get_all_movies()
 
@@ -32,18 +45,5 @@ class MovieModel:
         return cls.gateway.get_movie_title(movie_id)
 
     @classmethod
-    def add_movie(cls, title, movie_year, rating):
-        movie_year = int(movie_year)
-        rating = float(rating)
-        cls.validate(movie_year, rating)
-        cls.gateway.add_movie(title, movie_year, rating)
-
-    @classmethod
     def delete_movie(cls, movie_id):
         cls.gateway.delete_movie(movie_id)
-
-    @classmethod
-    def get_movie(cls, movie_id):
-        movie = cls.gateway.get_movie(movie_id)
-        if movie is not None:
-            return cls(**movie)

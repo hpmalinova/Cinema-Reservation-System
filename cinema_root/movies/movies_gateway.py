@@ -8,18 +8,15 @@ class MovieGateway:
             movie = Movie(title=title, movie_year=movie_year, rating=rating)
             session.add(movie)
 
-    def delete_movie(self, movie_id):
-        with session_scope() as session:
-            session.query(Movie).filter(Movie.movie_id == movie_id).delete()
-
     def get_movie(self, movie_id):
         with session_scope() as session:
-            raw_movie = session.query(Movie).filter(Movie.movie_id == movie_id).one()
+            raw_movie = session.query(Movie).filter(Movie.movie_id == movie_id).first()
 
-            raw_dict = raw_movie.__dict__
-            del raw_dict['_sa_instance_state']
+            if raw_movie:
+                raw_dict = raw_movie.__dict__
+                del raw_dict['_sa_instance_state']
 
-            return raw_dict
+                return raw_dict
 
     def get_all_movies(self):
         with session_scope() as session:
@@ -35,9 +32,13 @@ class MovieGateway:
 
     def get_movie_title(self, movie_id):
         with session_scope() as session:
-            raw_movie = session.query(Movie).filter(Movie.movie_id == movie_id).one()
+            raw_movie = session.query(Movie).filter(Movie.movie_id == movie_id).first()
 
             raw_dict = raw_movie.__dict__
             del raw_dict['_sa_instance_state']
 
             return raw_dict["title"]
+
+    def delete_movie(self, movie_id):
+        with session_scope() as session:
+            session.query(Movie).filter(Movie.movie_id == movie_id).delete()
