@@ -28,9 +28,6 @@ jobs:
     - name: Build database
       run: |
         python main.py build
-    - name: Start application
-      run: |
-        python main.py start
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
