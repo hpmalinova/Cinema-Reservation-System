@@ -1,46 +1,87 @@
-from cinema_root.db import Database
-from .movie_queries import (SELECT_ALL_MOVIES, CREATE_QUERY, GET_MOVIE_ID,
-                            GET_MOVIE_BY_ID, DELETE_MOVIE_BY_ID, GET_TITLE_BY_ID)
+from cinema_root.db import Database, Movie
 
 
 class MovieGateway:
     def __init__(self):
-        self.db = Database()
+        self.db = Database
 
-    def add_movie(self, title, year, rating):
-        # Create Movie in DB
-        self.db.cursor.execute(CREATE_QUERY, (title, year, rating))
+    def add_movie(self, title, year, rating):  # DONE?
+        session = self.db.create_session()
 
-        # Get Movie ID from DB
-        self.db.cursor.execute(GET_MOVIE_ID, (title, year))
+        session.add_all([
+            Movie(title=title, year=year, rating=rating)
+        ])
+        session.commit()
 
-        movie_id = self.db.cursor.fetchone()[0]
+        raw_movie = session.query(Movie).filter(Movie.title == title)\
+                                        .filter(Movie.year == year)\
+                                        .filter(Movie.rating == rating)\
+                                        .one()
 
-        self.db.connection.commit()
-        print(f'Successfully created movie with id={movie_id}')
+        raw_dict = raw_movie.__dict__
+        del raw_dict['_sa_instance_state']
 
-    def delete_movie(self, id):
-        self.db.cursor.execute(DELETE_MOVIE_BY_ID, (id))
-        self.db.connection.commit()
+        session.close()
+        return raw_dict
 
-    def get_movie(self, id):
-        self.db.cursor.execute(GET_MOVIE_BY_ID, (id,))
-        movie = self.db.cursor.fetchone()
-        self.db.connection.commit()
+    def delete_movie(self, id):  # DONE?
+        session = self.db.create_session()
 
-        return movie
+        try:
+            session.query(Movie).filter(Movie.id == id).one()
+        except Exception:
+            session.close()
+            return False
 
-    def get_all_movies(self):
-        self.db.cursor.execute(SELECT_ALL_MOVIES)
-        raw_movies = self.db.cursor.fetchall()
+        session.query(Movie).filter(Movie.id == id).delete()
 
-        self.db.connection.commit()
+        session.commit()
+        session.close()
 
-        return raw_movies
+    def get_movie(self, id):  # DONE?
+        session = self.db.create_session()
 
-    def get_movie_title(self, id):
-        self.db.cursor.execute(GET_TITLE_BY_ID, (id))
-        title = self.db.cursor.fetchone()
-        self.db.connection.commit()
+        try:
+            raw_movie = session.query(Movie).filter(Movie.id == id).one()
+        except Exception:
+            session.close()
+            return False
 
-        return title
+        raw_dict = raw_movie.__dict__
+        del raw_dict['_sa_instance_state']
+
+        session.close()
+        return raw_dict
+
+    def get_all_movies(self):  # DONE?
+        session = self.db.create_session()
+        raw_movies_dict = []
+
+        try:
+            raw_movies = session.query(Movie)
+        except Exception:
+            session.close()
+            return False
+
+        for raw_movie in raw_movies:
+            raw_dict = raw_movie.__dict__
+            del raw_dict['_sa_instance_state']
+            raw_movies_dict.append(raw_dict)
+
+        session.close()
+        return raw_movies_dict
+
+    def get_movie_title(self, id):  # DONE?
+        session = self.db.create_session()
+
+        try:
+            raw_movie = session.query(Movie).filter(Movie.id == id).one()
+        except Exception:
+            session.close()
+            return False
+
+        raw_dict = raw_movie.__dict__
+        del raw_dict['_sa_instance_state']
+
+        session.close()
+        return raw_dict["title"]
