@@ -21,9 +21,9 @@ class UserGateway:
         with session_scope() as session:
             raw_user = session.query(User)\
                               .filter(User.email == email)\
-                              .one()
+                              .first()
 
-            if hashed_password == raw_user.__dict__['password']:
+            if raw_user and hashed_password == raw_user.__dict__['password']:
                 raw_dict = raw_user.__dict__
                 del raw_dict['_sa_instance_state']
                 return raw_dict
@@ -32,12 +32,12 @@ class UserGateway:
         with session_scope() as session:
             raw_user = session.query(User)\
                               .filter(User.user_id == user_id)\
-                              .one()
+                              .first()
+            if raw_user:
+                raw_dict = raw_user.__dict__
+                del raw_dict['_sa_instance_state']
 
-            raw_dict = raw_user.__dict__
-            del raw_dict['_sa_instance_state']
-
-            return raw_dict
+                return raw_dict
 
     def get_all_users(self):
         with session_scope() as session:

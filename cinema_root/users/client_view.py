@@ -15,24 +15,7 @@ class ClientView:
         os.system('clear')
         print(f'Welcome to HackCinema, {self.user.email}')
         self.execute_command('help')
-
-        command = get_input('>> Your command: ')
-        os.system('clear')
-        while command != 'exit':
-            try:
-                os.system('clear')
-                self.execute_command(command)
-                input('\n#  Press Enter')
-                os.system('clear')
-                show_help_exists()
-                command = get_input('>> Your command: ')
-                os.system('clear')
-            except Exception as exc:
-                os.system('clear')
-                print(str(exc), '\n')
-                show_help_exists()
-                command = get_input('>> Your command: ')
-
+        self._get_client_commands()
         print('Goodbye!')
 
     def execute_command(self, command):
@@ -73,6 +56,7 @@ class ClientView:
         print('[-] exit')
         print(BACKGROUND_LINE)
 
+    # User
     def view_profile(self, *args):
         print(BACKGROUND_LINE)
         print('[User ID]: ', self.user.user_id)
@@ -80,9 +64,11 @@ class ClientView:
         print('[Type]:    ', self.user.user_type)
         print(BACKGROUND_LINE)
 
+    # Movie
     def show_all_movies(self, *args):
         MovieViews().show_all_movies()
 
+    # Projection
     def show_projections(self, *args):
         ProjectionView().show_all_projections()
 
@@ -91,6 +77,7 @@ class ClientView:
         assert int(args[0][0])
         ProjectionView().show_projections_by_movie_id(int(args[0][0]))
 
+    # Reservation
     def show_my_reservations(self, *args):
         ReservationViews().show_my_reservations(self.user.user_id)
 
@@ -101,3 +88,24 @@ class ClientView:
     def delete_reservation(self, *args):
         assert args[0] == [], Exception('delete_reservation does not take any arguments')
         ReservationViews().delete_reservation(self.user.user_id)
+
+    # TODO Make common view class that has this command
+    # and Client&Admin inherits it
+    def _get_client_commands(self):
+        command = get_input('>> Your command: ')
+        os.system('clear')
+
+        while command != 'exit':
+            try:
+                os.system('clear')
+                self.execute_command(command)
+                input('\n#  Press Enter')
+                os.system('clear')
+                show_help_exists()
+                command = get_input('>> Your command: ')
+                os.system('clear')
+            except Exception as exc:
+                os.system('clear')
+                print(str(exc), '\n')
+                show_help_exists()
+                command = get_input('>> Your command: ')

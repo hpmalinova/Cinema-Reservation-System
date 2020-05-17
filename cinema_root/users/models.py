@@ -42,7 +42,7 @@ class UserModel:
     @classmethod
     def get_user(cls, *, user_id):
         raw_user = cls.gateway.get_user(user_id=user_id)
-        if raw_user is not None:
+        if raw_user:
             return cls(**raw_user)
 
     @classmethod
